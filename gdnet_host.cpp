@@ -4,7 +4,7 @@ GDNetHost::GDNetHost() :
 	_host(NULL),
 	_running(false),
 	_thread(NULL),
-	_max_clients(DEFAULT_MAX_CLIENTS),
+	_max_peers(DEFAULT_MAX_PEERS),
 	_max_channels(1),
 	_max_bandwidth_in(0),
 	_max_bandwidth_out(0) {		
@@ -145,7 +145,7 @@ Error GDNetHost::bind(Ref<GDNetAddress> addr) {
 	CharString host_addr = addr->get_host().ascii();
 	
 	if (addr->get_port() <= 0) {
-		_host = enet_host_create(NULL, _max_clients, _max_channels, _max_bandwidth_in, _max_bandwidth_out);
+		_host = enet_host_create(NULL, _max_peers, _max_channels, _max_bandwidth_in, _max_bandwidth_out);
 	} else {
 		ENetAddress enet_addr;
 		enet_addr.port = addr->get_port();
@@ -159,7 +159,7 @@ Error GDNetHost::bind(Ref<GDNetAddress> addr) {
 			}
 		}
 	
-		_host = enet_host_create(&enet_addr, _max_clients, _max_channels, _max_bandwidth_in, _max_bandwidth_out);
+		_host = enet_host_create(&enet_addr, _max_peers, _max_channels, _max_bandwidth_in, _max_bandwidth_out);
 	}
 	
 	ERR_FAIL_COND_V(_host == NULL, FAILED);

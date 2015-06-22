@@ -27,14 +27,14 @@ class GDNetHost : public Reference {
 
 	enum {
 		THREAD_LOOP_WAIT = 1,
-		DEFAULT_MAX_CLIENTS = 32
+		DEFAULT_MAX_PEERS = 32
 	};
 	
 	ENetHost* _host;
 	volatile bool _running;
 	Thread* _thread;
 	
-	int _max_clients;
+	int _max_peers;
 	int _max_channels;
 	int _max_bandwidth_in;
 	int _max_bandwidth_out;	
@@ -60,7 +60,7 @@ public:
 
 	Ref<GDNetPeer> get_peer(int id);
 
-	void set_max_clients(int max) { _max_clients = max; }
+	void set_max_peers(int max) { _max_peers = max; }
 	void set_max_channels(int max) { _max_channels = max; }
 	void set_max_bandwidth_in(int max) { _max_bandwidth_in = max; }
 	void set_max_bandwidth_out(int max) { _max_bandwidth_out = max; }
