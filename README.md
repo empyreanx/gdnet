@@ -8,7 +8,7 @@ An [ENet](http://enet.bespin.org/) wrapper for Godot.
 
 ## Installation
 
-Simply drop the `gdnet` directory in your `godot/modules` directory and build for the platfom of your choice. GDNet has been verifed to build on Linux (64 bit), MacOS X (32/64 bit), and Windows (32/64 bit).
+Simply drop the `gdnet` directory in your `godot/modules` directory and build for the platfom of your choice. GDNet has been verifed to build on Linux (64 bit), MacOS X (32/64 bit), and Windows (32/64 bit cross-compiled using MinGW).
 
 ## Example
 
@@ -91,11 +91,11 @@ broadcasting hello!
 
 #### GDNetEvent
 
-- **get_event_type()** - returns one of GDNetEvent.CONNECT, GDNetEvent.DISCONNECT, or GDNetEvent.RECEIVE
+- **get_event_type()** - returns one of `GDNetEvent.CONNECT`, `GDNetEvent.DISCONNECT`, or `GDNetEvent.RECEIVE`
 - **get_peer_id()** - the peer associated with the event
-- **get_channel_id()** - only valid for RECEIVE events
-- **get_packet():RawArray** - only valid for RECEIVE events
-- **get_var():Variant** - only valid for RECEIVE events
+- **get_channel_id()** - only valid for `GDNetEvent.RECEIVE` events
+- **get_packet():RawArray** - only valid for `GDNetEvent.RECEIVE` events
+- **get_var():Variant** - only valid for `GDNetEvent.RECEIVE` events
 
 #### GDNetHost
 
@@ -107,8 +107,8 @@ broadcasting hello!
 - **bind(addr:GDNetAddress)** - starts the host (pass in an empty address to let the system choose which interface and port to bind)
 - **unbind()** - stops the host
 - **connect(addr:GDNetAddress):GDNetPeer** - attempt to connect to a remote host
-- **broadcast_packet(packet:RawArray, channel_id:Integer, type:Integer)** - type must be one of GDNetMessage.UNSEQUENCED, GDNetMessage.SEQUENCED, or GDNetMessage.RELIABLE
-- **broadcast_var(var:Variant, channel_id:Integer, type:Integer)** - type must be one of GDNetMessage.UNSEQUENCED, GDNetMessage.SEQUENCED, or GDNetMessage.RELIABLE
+- **broadcast_packet(packet:RawArray, channel_id:Integer, type:Integer)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
+- **broadcast_var(var:Variant, channel_id:Integer, type:Integer)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
 - **is_event_available():Boolean** - returns `true` if there is an event in the queue
 - **get_event():GDNetEvent** - return the next event in the queue
 
@@ -120,8 +120,8 @@ broadcasting hello!
 - **disconnect()** - request a disconnection from a peer
 - **disconnect_later()** - request disconnection after all queued packets have been sent
 - **disconnect_now()** - forcefully disconnect peer (notification is sent, but not guaranteed to arrive)
-- **send_packet(packet:RawArray, channel_id:int, type:int)** - type must be one of GDNetMessage.UNSEQUENCED, GDNetMessage.SEQUENCED, or GDNetMessage.RELIABLE
-- **send_var(var:Variant, channel_id:int, type:int)** - type must be one of GDNetMessage.UNSEQUENCED, GDNetMessage.SEQUENCED, or GDNetMessage.RELIABLE
+- **send_packet(packet:RawArray, channel_id:int, type:int)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
+- **send_var(var:Variant, channel_id:int, type:int)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
 
 ## License
 Copyright (c) 2015 James McLean  
