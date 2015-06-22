@@ -1,0 +1,8 @@
+# SCsub
+Import('env')
+
+SConscript("enet/SCsub")
+
+local_env = env.Clone()
+local_env.Append(CPPPATH=['enet/include'])
+local_env.add_source_files(env.modules_sources,"*.cpp")
