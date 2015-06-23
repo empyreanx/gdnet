@@ -42,7 +42,7 @@ func _iteration(delta):
 		var event = client1.get_event()
 		if (event.get_event_type() == GDNetEvent.CONNECT):
 			print("Client1 connected")
-			peer1.send_var("hello from client1", 0)
+			peer1.send_var("Hello from client 1", 0)
 		if (event.get_event_type() == GDNetEvent.RECEIVE):
 			print(event.get_var())
 
@@ -50,34 +50,37 @@ func _iteration(delta):
 		var event = client2.get_event()
 		if (event.get_event_type() == GDNetEvent.CONNECT):
 			print("Client2 connected")
-			peer2.send_var("hello from client2", 0)
+			peer2.send_var("Hello from client 2", 0)
 		if (event.get_event_type() == GDNetEvent.RECEIVE):
 			print(event.get_var())
 
 	if (server.is_event_available()):
 		var event = server.get_event()
 		if (event.get_event_type() == GDNetEvent.CONNECT):
-			print("Server connected")
-			server.get_peer(event.get_peer_id()).send_var(str("hello from server to peer ", event.get_peer_id()), 0)
+			var peer = server.get_peer(event.get_peer_id())
+			var address = peer.get_address();
+			print("Peer connected from ", address.get_host(), ":", address.get_port())
+			peer.send_var(str("Hello from server to peer ", event.get_peer_id()), 0)
 		elif (event.get_event_type() == GDNetEvent.RECEIVE):
 			print(event.get_var())
-			server.broadcast_var("broadcasting hello!", 0)
+			server.broadcast_var("Server broadcast", 0)
+
 ```
 
 **Sample Output:**
 ```
 Client1 connected
 Client2 connected
-Server connected
-hello from server to peer 0
-Server connected
-hello from client2
-hello from server to peer 1
-broadcasting hello!
-hello from client1
-broadcasting hello!
-broadcasting hello!
-broadcasting hello!
+Peer connected from 127.0.0.1:56075
+Peer connected from 127.0.0.1:42174
+Hello from server to peer 0
+Hello from client 2
+Hello from server to peer 1
+Server broadcast
+Hello from client 1
+Server broadcast
+Server broadcast
+Server broadcast
 ```
 
 ## API

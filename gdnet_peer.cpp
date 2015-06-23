@@ -16,6 +16,17 @@ int GDNetPeer::get_peer_id() {
 	return _peer->incomingPeerID;
 }
 
+Ref<GDNetAddress> GDNetPeer::get_address() {
+	Ref<GDNetAddress> address = memnew(GDNetAddress);
+	address->set_port(_peer->address.port);
+	
+	char ip[64];
+	enet_address_get_host_ip(&_peer->address, ip, 64);
+	address->set_host(ip);
+	
+	return address;
+}
+
 void GDNetPeer::ping() {
 	ERR_FAIL_COND(_host->_host == NULL);
 	
@@ -82,6 +93,7 @@ void GDNetPeer::send_var(const Variant& var, int channel_id, int type) {
 
 void GDNetPeer::_bind_methods() {
 	ObjectTypeDB::bind_method("get_peer_id",&GDNetPeer::get_peer_id);
+	ObjectTypeDB::bind_method("get_address",&GDNetPeer::get_address);
 	ObjectTypeDB::bind_method("ping",&GDNetPeer::ping);
 	ObjectTypeDB::bind_method("reset",&GDNetPeer::reset);
 	ObjectTypeDB::bind_method("disconnect",&GDNetPeer::disconnect);

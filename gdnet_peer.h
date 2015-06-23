@@ -9,6 +9,7 @@
 
 #include "enet/enet.h"
 
+#include "gdnet_address.h"
 #include "gdnet_host.h"
 #include "gdnet_message.h"
 
@@ -31,6 +32,8 @@ public:
 	~GDNetPeer();
 	
 	int get_peer_id();
+	
+	Ref<GDNetAddress> get_address();
 	
 	void ping();
 	void reset();
