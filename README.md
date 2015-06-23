@@ -4,7 +4,7 @@ An [ENet](http://enet.bespin.org/) wrapper for Godot.
 
 ## About
 
-[ENet](http://enet.bespin.org/) is a library that provides a number of features on top of UDP such as, connection handling, sequencing, reliability, channels, packet fragmentation and reassembly.
+[ENet](http://enet.bespin.org/) is a library that provides a number of features on top of UDP such as, connection handling, sequencing, reliability, channels, bandwidth throttling, packet fragmentation and reassembly. GDNet provides a (mostly) thin wrapper around ENet.
 
 ## Installation
 
