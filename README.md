@@ -30,11 +30,11 @@ func _init():
 	server.bind(address)
 
 	client1 = GDNetHost.new()
-	client1.bind(GDNetAddress.new())
+	client1.bind()
 	peer1 = client1.connect(address)
 
 	client2 = GDNetHost.new()
-	client2.bind(GDNetAddress.new())
+	client2.bind()
 	peer2 = client2.connect(address)
 
 func _iteration(delta):
@@ -64,7 +64,6 @@ func _iteration(delta):
 		elif (event.get_event_type() == GDNetEvent.RECEIVE):
 			print(event.get_var())
 			server.broadcast_var("Server broadcast", 0)
-
 ```
 
 **Sample Output:**
@@ -107,7 +106,7 @@ Server broadcast
 - **set_max_channels(max:Integer)** - must be called before `bind` (default: 1)
 - **set_max_bandwidth_in(max:Integer)** - measured in bytes/sec, must be called before `bind` (default: unlimited)
 - **set_max_bandwidth_out(max:Integer)** - measured in bytes/sec, must be called before `bind` (default: unlimited)
-- **bind(addr:GDNetAddress)** - starts the host (pass in an empty address to let the system choose which interface and port to bind)
+- **bind(addr:GDNetAddress)** - starts the host (addr is optional)
 - **unbind()** - stops the host
 - **connect(addr:GDNetAddress):GDNetPeer** - attempt to connect to a remote host
 - **broadcast_packet(packet:RawArray, channel_id:Integer, type:Integer)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
