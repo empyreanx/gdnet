@@ -8,7 +8,7 @@ An [ENet](http://enet.bespin.org/) wrapper for Godot.
 
 ## Installation
 
-Simply drop the `gdnet` directory in your `godot/modules` directory and build for the platfom of your choice. GDNet has been verifed to build on Linux (64 bit), MacOS X (32/64 bit), and Windows (32/64 bit cross-compiled using MinGW).
+Simply drop the `gdnet` directory in your `godot/modules` directory and build for the platfom of your choice. GDNet has been verified to build on Linux (64 bit), MacOS X (32/64 bit), and Windows (32/64 bit cross-compiled using MinGW).
 
 ## Example
 
