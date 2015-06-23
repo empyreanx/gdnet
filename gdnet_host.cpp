@@ -142,11 +142,11 @@ Error GDNetHost::bind(Ref<GDNetAddress> addr) {
 	if (_host != NULL)
 		enet_host_destroy(_host);
 	
-	CharString host_addr = addr->get_host().ascii();
-	
-	if (addr->get_port() <= 0) {
+	if (addr.is_null()) {
 		_host = enet_host_create(NULL, _max_peers, _max_channels, _max_bandwidth_in, _max_bandwidth_out);
 	} else {
+		CharString host_addr = addr->get_host().ascii();
+		
 		ENetAddress enet_addr;
 		enet_addr.port = addr->get_port();
 		
@@ -247,7 +247,7 @@ Ref<GDNetEvent> GDNetHost::get_event() {
 
 void GDNetHost::_bind_methods() {
 	ObjectTypeDB::bind_method("get_peer",&GDNetHost::get_peer);
-	ObjectTypeDB::bind_method("bind",&GDNetHost::bind);
+	ObjectTypeDB::bind_method("bind",&GDNetHost::bind,DEFVAL(NULL));
 	ObjectTypeDB::bind_method("unbind",&GDNetHost::unbind);
 	ObjectTypeDB::bind_method("connect",&GDNetHost::connect);
 	ObjectTypeDB::bind_method("broadcast_packet",&GDNetHost::broadcast_packet,DEFVAL(GDNetMessage::UNSEQUENCED));
