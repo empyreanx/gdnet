@@ -118,6 +118,7 @@ Server broadcast
 #### GDNetPeer
 
 - **get_peer_id():Integer**
+- **get_address():GDNetAddress**
 - **ping()** - sends a ping to the remote peer
 - **reset()** - forcefully disconnect a peer (foreign host is not notified)
 - **disconnect()** - request a disconnection from a peer
