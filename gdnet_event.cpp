@@ -29,4 +29,5 @@ void GDNetEvent::_bind_methods() {
 	ObjectTypeDB::bind_method("get_channel_id",&GDNetEvent::get_channel_id);
 	ObjectTypeDB::bind_method("get_packet",&GDNetEvent::get_packet);
 	ObjectTypeDB::bind_method("get_var",&GDNetEvent::get_var);
+	ObjectTypeDB::bind_method("get_data",&GDNetEvent::get_data);
 }

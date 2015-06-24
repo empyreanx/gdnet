@@ -93,11 +93,12 @@ Server broadcast
 
 #### GDNetEvent
 
-- **get_event_type()** - returns one of `GDNetEvent.CONNECT`, `GDNetEvent.DISCONNECT`, or `GDNetEvent.RECEIVE`
-- **get_peer_id()** - the peer associated with the event
-- **get_channel_id()** - only valid for `GDNetEvent.RECEIVE` events
+- **get_event_type():Integer** - returns one of `GDNetEvent.CONNECT`, `GDNetEvent.DISCONNECT`, or `GDNetEvent.RECEIVE`
+- **get_peer_id():Integer** - the peer associated with the event
+- **get_channel_id():Integer** - only valid for `GDNetEvent.RECEIVE` events
 - **get_packet():RawArray** - only valid for `GDNetEvent.RECEIVE` events
 - **get_var():Variant** - only valid for `GDNetEvent.RECEIVE` events
+- **get_data():Integer** - only valid for `GDNetEvent.CONNECT` and `GDNetEvent.DISCONNECT` events
 
 #### GDNetHost
 
@@ -106,9 +107,9 @@ Server broadcast
 - **set_max_channels(max:Integer)** - must be called before `bind` (default: 1)
 - **set_max_bandwidth_in(max:Integer)** - measured in bytes/sec, must be called before `bind` (default: unlimited)
 - **set_max_bandwidth_out(max:Integer)** - measured in bytes/sec, must be called before `bind` (default: unlimited)
-- **bind(addr:GDNetAddress)** - starts the host (addr is optional)
+- **bind(addr:GDNetAddress)** - starts the host (the system determines the interface/port to bind if `addr` is empty)
 - **unbind()** - stops the host
-- **connect(addr:GDNetAddress):GDNetPeer** - attempt to connect to a remote host
+- **connect(addr:GDNetAddress, data:Integer):GDNetPeer** - attempt to connect to a remote host (data default: 0)
 - **broadcast_packet(packet:RawArray, channel_id:Integer, type:Integer)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
 - **broadcast_var(var:Variant, channel_id:Integer, type:Integer)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
 - **is_event_available():Boolean** - returns `true` if there is an event in the queue
@@ -120,9 +121,9 @@ Server broadcast
 - **get_address():GDNetAddress**
 - **ping()** - sends a ping to the remote peer
 - **reset()** - forcefully disconnect a peer (foreign host is not notified)
-- **disconnect()** - request a disconnection from a peer
-- **disconnect_later()** - request disconnection after all queued packets have been sent
-- **disconnect_now()** - forcefully disconnect peer (notification is sent, but not guaranteed to arrive)
+- **disconnect(data:Integer)** - request a disconnection from a peer (data default: 0)
+- **disconnect_later(data:Integer)** - request disconnection after all queued packets have been sent (data default: 0)
+- **disconnect_now(data:Integer)** - forcefully disconnect peer (notification is sent, but not guaranteed to arrive) (data default: 0)
 - **send_packet(packet:RawArray, channel_id:int, type:int)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
 - **send_var(var:Variant, channel_id:int, type:int)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
 

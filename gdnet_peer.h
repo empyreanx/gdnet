@@ -38,9 +38,9 @@ public:
 	void ping();
 	void reset();
 	
-	void disconnect();
-	void disconnect_later();
-	void disconnect_now();
+	void disconnect(int data = 0);
+	void disconnect_later(int data = 0);
+	void disconnect_now(int data = 0);
 	
 	void send_packet(const ByteArray& packet, int channel_id, int type = GDNetMessage::UNSEQUENCED);
 	void send_var(const Variant& var, int channel_id, int type = GDNetMessage::UNSEQUENCED);

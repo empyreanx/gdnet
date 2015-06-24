@@ -80,7 +80,8 @@ void GDNetHost::poll_events() {
 				
 				event->set_event_type(GDNetEvent::CONNECT);
 				event->set_peer_id(enet_event.peer->incomingPeerID);
-					
+				event->set_data(enet_event.data);
+				
 			} break;
 				
 			case ENET_EVENT_TYPE_RECEIVE: {
@@ -107,7 +108,8 @@ void GDNetHost::poll_events() {
 				
 				event->set_event_type(GDNetEvent::DISCONNECT);
 				event->set_peer_id(enet_event.peer->incomingPeerID);
-
+				event->set_data(enet_event.data);
+				
 			} break;
 					
 			default:
@@ -181,7 +183,7 @@ void GDNetHost::unbind() {
 	}
 }
 
-Ref<GDNetPeer> GDNetHost::connect(Ref<GDNetAddress> addr) {
+Ref<GDNetPeer> GDNetHost::connect(Ref<GDNetAddress> addr, int data) {
 
 	ERR_FAIL_COND_V(_host == NULL, NULL);
 	
@@ -195,7 +197,7 @@ Ref<GDNetPeer> GDNetHost::connect(Ref<GDNetAddress> addr) {
 		return NULL;
 	}
 	
-	ENetPeer* peer = enet_host_connect(_host, &enet_addr, _max_channels, 0);
+	ENetPeer* peer = enet_host_connect(_host, &enet_addr, _max_channels, data);
 	
 	ERR_FAIL_COND_V(peer == NULL, NULL);
 	
@@ -249,7 +251,7 @@ void GDNetHost::_bind_methods() {
 	ObjectTypeDB::bind_method("get_peer",&GDNetHost::get_peer);
 	ObjectTypeDB::bind_method("bind",&GDNetHost::bind,DEFVAL(NULL));
 	ObjectTypeDB::bind_method("unbind",&GDNetHost::unbind);
-	ObjectTypeDB::bind_method("connect",&GDNetHost::connect);
+	ObjectTypeDB::bind_method("connect",&GDNetHost::connect,DEFVAL(0));
 	ObjectTypeDB::bind_method("broadcast_packet",&GDNetHost::broadcast_packet,DEFVAL(GDNetMessage::UNSEQUENCED));
 	ObjectTypeDB::bind_method("broadcast_var",&GDNetHost::broadcast_var,DEFVAL(GDNetMessage::UNSEQUENCED));
 	ObjectTypeDB::bind_method("is_event_available",&GDNetHost::is_event_available);
