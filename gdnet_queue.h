@@ -3,6 +3,8 @@
 #ifndef GDNET_QUEUE_H
 #define GDNET_QUEUE_H
 
+#include "os/memory.h"
+
 template<class T, int SIZE = 1024>
 class GDNetQueue {
 	T* items[SIZE];
@@ -18,6 +20,15 @@ public:
 
 	bool is_full() {
 		return ((write_pos + 1) % SIZE == read_pos);
+	}
+
+	int size() {
+		if (write_pos > read_pos)
+			return write_pos - read_pos;
+		else if (write_pos < read_pos)
+			return (SIZE - read_pos) + write_pos;
+		else
+			return 0;
 	}
 	
 	void push(T* item) {
@@ -35,9 +46,13 @@ public:
 		return item;
 	}
 
-	void clear() { read_pos = write_pos = 0; }
+	void clear() {
+		while (!is_empty()) {
+			memdelete(pop());
+		}
+	}
 
-	GDNetQueue() { clear(); }
+	GDNetQueue() { read_pos = write_pos = 0; }
 };
 
 #endif

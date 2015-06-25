@@ -166,9 +166,6 @@ Error GDNetHost::bind(Ref<GDNetAddress> addr) {
 	
 	ERR_FAIL_COND_V(_host == NULL, FAILED);
 	
-	_message_queue.clear();
-	_event_queue.clear();
-	
 	thread_start();
 	
 	return OK;
@@ -180,6 +177,8 @@ void GDNetHost::unbind() {
 		enet_host_flush(_host);
 		enet_host_destroy(_host);
 		_host = NULL;
+		_message_queue.clear();
+		_event_queue.clear();
 	}
 }
 
@@ -243,6 +242,10 @@ bool GDNetHost::is_event_available() {
 	return (!_event_queue.is_empty());
 }
 
+int GDNetHost::get_event_count() {
+	return (_event_queue.size());
+}
+
 Ref<GDNetEvent> GDNetHost::get_event() {
 	return (_event_queue.pop());
 }
@@ -255,5 +258,6 @@ void GDNetHost::_bind_methods() {
 	ObjectTypeDB::bind_method("broadcast_packet",&GDNetHost::broadcast_packet,DEFVAL(GDNetMessage::UNSEQUENCED));
 	ObjectTypeDB::bind_method("broadcast_var",&GDNetHost::broadcast_var,DEFVAL(GDNetMessage::UNSEQUENCED));
 	ObjectTypeDB::bind_method("is_event_available",&GDNetHost::is_event_available);
+	ObjectTypeDB::bind_method("get_event_count",&GDNetHost::get_event_count);
 	ObjectTypeDB::bind_method("get_event",&GDNetHost::get_event);
 }
