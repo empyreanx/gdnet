@@ -58,7 +58,7 @@ public:
 
 	GDNetHost();
 
-	Ref<GDNetPeer> get_peer(int id);
+	Ref<GDNetPeer> get_peer(unsigned id);
 
 	void set_max_peers(int max) { _max_peers = max; }
 	void set_max_channels(int max) { _max_channels = max; }

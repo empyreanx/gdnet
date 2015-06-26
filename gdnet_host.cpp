@@ -54,13 +54,7 @@ void GDNetHost::send_messages() {
 			if (message->is_broadcast()) {
 				enet_host_broadcast(_host, message->get_channel_id(), enet_packet);
 			} else {
-				for (int i = 0; i < _host->peerCount; i++) {				
-					if (_host->peers[i].incomingPeerID == message->get_peer_id()) {
-						enet_peer_send(&_host->peers[i], message->get_channel_id(), enet_packet);
-						break;
-					}
-				}
-				
+				enet_peer_send(&_host->peers[message->get_peer_id()], message->get_channel_id(), enet_packet);				
 			}
 		}
 		
@@ -127,22 +121,16 @@ void GDNetHost::thread_loop() {
 	}
 }
 
-Ref<GDNetPeer> GDNetHost::get_peer(int id) {
-	if (_host != NULL) {
-		for (int i = 0; i < _host->peerCount; i++) {
-			if (_host->peers[i].incomingPeerID == id) {
-				return memnew(GDNetPeer(this, &_host->peers[i]));
-				break;
-			}
-		}
+Ref<GDNetPeer> GDNetHost::get_peer(unsigned id) {
+	if (_host != NULL && id < _host->peerCount) {
+		return memnew(GDNetPeer(this, &_host->peers[id]));
 	}
 	
 	return Ref<GDNetPeer>(NULL);
 }
 
 Error GDNetHost::bind(Ref<GDNetAddress> addr) {
-	if (_host != NULL)
-		enet_host_destroy(_host);
+	ERR_FAIL_COND_V(_host != NULL, FAILED);
 	
 	if (addr.is_null()) {
 		_host = enet_host_create(NULL, _max_peers, _max_channels, _max_bandwidth_in, _max_bandwidth_out);
@@ -183,7 +171,6 @@ void GDNetHost::unbind() {
 }
 
 Ref<GDNetPeer> GDNetHost::connect(Ref<GDNetAddress> addr, int data) {
-
 	ERR_FAIL_COND_V(_host == NULL, NULL);
 	
 	ENetAddress enet_addr;

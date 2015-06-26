@@ -13,7 +13,10 @@ GDNetPeer::~GDNetPeer() {
 int GDNetPeer::get_peer_id() {
 	ERR_FAIL_COND_V(_host->_host == NULL, -1);
 	
-	return _peer->incomingPeerID;
+	//return _peer->incomingPeerID;
+	
+	//this should be equivalent to the above, but explicitly determine the index just to be safe
+	return (int)(_peer - _host->_host->peers);
 }
 
 Ref<GDNetAddress> GDNetPeer::get_address() {
