@@ -4,6 +4,7 @@ GDNetHost::GDNetHost() :
 	_host(NULL),
 	_running(false),
 	_thread(NULL),
+	_mutex(NULL),
 	_event_wait(DEFAULT_EVENT_WAIT),
 	_max_peers(DEFAULT_MAX_PEERS),
 	_max_channels(1),
@@ -13,6 +14,7 @@ GDNetHost::GDNetHost() :
 
 void GDNetHost::thread_start() {
 	_running = true;
+	_mutex = Mutex::create();
 	_thread = Thread::create(thread_callback, this);
 }
 
@@ -23,6 +25,9 @@ void GDNetHost::thread_stop() {
 	
 	memdelete(_thread);
 	_thread = NULL;
+	
+	memdelete(_mutex);
+	_mutex = NULL;
 }
 
 void GDNetHost::thread_callback(void *instance) {
@@ -119,8 +124,10 @@ void GDNetHost::poll_events() {
 
 void GDNetHost::thread_loop() {
 	while (_running) {
+		_mutex->lock();
 		send_messages();
 		poll_events();
+		_mutex->unlock();
 	}
 }
 

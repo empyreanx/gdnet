@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "os/thread.h"
+#include "os/mutex.h"
 #include "os/os.h"
 #include "reference.h"
 
@@ -34,6 +35,7 @@ class GDNetHost : public Reference {
 	ENetHost* _host;
 	volatile bool _running;
 	Thread* _thread;
+	Mutex* _mutex;
 	
 	int _event_wait;
 	int _max_peers;

@@ -33,31 +33,41 @@ Ref<GDNetAddress> GDNetPeer::get_address() {
 void GDNetPeer::ping() {
 	ERR_FAIL_COND(_host->_host == NULL);
 	
+	_host->_mutex->lock();
 	enet_peer_ping(_peer);
+	_host->_mutex->unlock();
 }
 
 void GDNetPeer::reset() {
 	ERR_FAIL_COND(_host->_host == NULL);
 	
+	_host->_mutex->lock();
 	enet_peer_reset(_peer);
+	_host->_mutex->unlock();
 }
 
 void GDNetPeer::disconnect(int data) {
 	ERR_FAIL_COND(_host->_host == NULL);
 	
+	_host->_mutex->lock();
 	enet_peer_disconnect(_peer, data);
+	_host->_mutex->unlock();
 }
 
 void GDNetPeer::disconnect_later(int data) {
 	ERR_FAIL_COND(_host->_host == NULL);
 	
+	_host->_mutex->lock();
 	enet_peer_disconnect_later(_peer, data);
+	_host->_mutex->unlock();
 }
 
 void GDNetPeer::disconnect_now(int data) {
 	ERR_FAIL_COND(_host->_host == NULL);
 	
+	_host->_mutex->lock();
 	enet_peer_disconnect_now(_peer, data);
+	_host->_mutex->unlock();
 }
 
 void GDNetPeer::send_packet(const ByteArray& packet, int channel_id, int type) {
