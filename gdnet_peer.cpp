@@ -102,6 +102,6 @@ void GDNetPeer::_bind_methods() {
 	ObjectTypeDB::bind_method("disconnect",&GDNetPeer::disconnect,DEFVAL(0));
 	ObjectTypeDB::bind_method("disconnect_later",&GDNetPeer::disconnect_later,DEFVAL(0));
 	ObjectTypeDB::bind_method("disconnect_now",&GDNetPeer::disconnect_now,DEFVAL(0));
-	ObjectTypeDB::bind_method("send_packet",&GDNetPeer::send_packet,DEFVAL(GDNetMessage::UNSEQUENCED));
-	ObjectTypeDB::bind_method("send_var",&GDNetPeer::send_var,DEFVAL(GDNetMessage::UNSEQUENCED));
+	ObjectTypeDB::bind_method("send_packet",&GDNetPeer::send_packet,DEFVAL(0),DEFVAL(GDNetMessage::UNSEQUENCED));
+	ObjectTypeDB::bind_method("send_var",&GDNetPeer::send_var,DEFVAL(0),DEFVAL(GDNetMessage::UNSEQUENCED));
 }

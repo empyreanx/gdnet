@@ -4,6 +4,7 @@ GDNetHost::GDNetHost() :
 	_host(NULL),
 	_running(false),
 	_thread(NULL),
+	_event_wait(DEFAULT_EVENT_WAIT),
 	_max_peers(DEFAULT_MAX_PEERS),
 	_max_channels(1),
 	_max_bandwidth_in(0),
@@ -66,8 +67,10 @@ void GDNetHost::poll_events() {
 	GDNetEvent* event;
 	ENetEvent enet_event;
 	
-	if (enet_host_service(_host, &enet_event, THREAD_LOOP_WAIT) > 0) {
+	if (enet_host_service(_host, &enet_event, _event_wait) > 0) {
 		event = memnew(GDNetEvent);
+
+		event->set_time(OS::get_singleton()->get_ticks_msec());
 		
 		switch (enet_event.type) {
 			case ENET_EVENT_TYPE_CONNECT: {
@@ -239,11 +242,18 @@ Ref<GDNetEvent> GDNetHost::get_event() {
 
 void GDNetHost::_bind_methods() {
 	ObjectTypeDB::bind_method("get_peer",&GDNetHost::get_peer);
+	
+	ObjectTypeDB::bind_method("set_event_wait",&GDNetHost::set_event_wait);
+	ObjectTypeDB::bind_method("set_max_peers",&GDNetHost::set_max_peers);
+	ObjectTypeDB::bind_method("set_max_channels",&GDNetHost::set_max_channels);
+	ObjectTypeDB::bind_method("set_max_bandwidth_in",&GDNetHost::set_max_bandwidth_in);
+	ObjectTypeDB::bind_method("set_max_bandwidth_out",&GDNetHost::set_max_bandwidth_out);
+	
 	ObjectTypeDB::bind_method("bind",&GDNetHost::bind,DEFVAL(NULL));
 	ObjectTypeDB::bind_method("unbind",&GDNetHost::unbind);
 	ObjectTypeDB::bind_method("connect",&GDNetHost::connect,DEFVAL(0));
-	ObjectTypeDB::bind_method("broadcast_packet",&GDNetHost::broadcast_packet,DEFVAL(GDNetMessage::UNSEQUENCED));
-	ObjectTypeDB::bind_method("broadcast_var",&GDNetHost::broadcast_var,DEFVAL(GDNetMessage::UNSEQUENCED));
+	ObjectTypeDB::bind_method("broadcast_packet",&GDNetHost::broadcast_packet,DEFVAL(0),DEFVAL(GDNetMessage::UNSEQUENCED));
+	ObjectTypeDB::bind_method("broadcast_var",&GDNetHost::broadcast_var,DEFVAL(0),DEFVAL(GDNetMessage::UNSEQUENCED));
 	ObjectTypeDB::bind_method("is_event_available",&GDNetHost::is_event_available);
 	ObjectTypeDB::bind_method("get_event_count",&GDNetHost::get_event_count);
 	ObjectTypeDB::bind_method("get_event",&GDNetHost::get_event);

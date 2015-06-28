@@ -13,11 +13,10 @@
 
 void register_gdnet_types() {
 	ObjectTypeDB::register_virtual_type<GDNetPeer>();
+	ObjectTypeDB::register_virtual_type<GDNetEvent>();
 	ObjectTypeDB::register_virtual_type<GDNetMessage>();
 	ObjectTypeDB::register_type<GDNetHost>();
 	ObjectTypeDB::register_type<GDNetAddress>();
-	ObjectTypeDB::register_type<GDNetEvent>();
-	
 	
 	if (enet_initialize() != 0)
 		ERR_EXPLAIN("Unable to initialize ENet");

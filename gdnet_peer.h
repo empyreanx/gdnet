@@ -42,8 +42,8 @@ public:
 	void disconnect_later(int data = 0);
 	void disconnect_now(int data = 0);
 	
-	void send_packet(const ByteArray& packet, int channel_id, int type = GDNetMessage::UNSEQUENCED);
-	void send_var(const Variant& var, int channel_id, int type = GDNetMessage::UNSEQUENCED);
+	void send_packet(const ByteArray& packet, int channel_id = 0, int type = GDNetMessage::UNSEQUENCED);
+	void send_var(const Variant& var, int channel_id = 0, int type = GDNetMessage::UNSEQUENCED);
 };
 
 #endif

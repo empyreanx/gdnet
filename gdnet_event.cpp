@@ -25,6 +25,7 @@ void GDNetEvent::_bind_methods() {
 	BIND_CONSTANT(RECEIVE);
 	
 	ObjectTypeDB::bind_method("get_event_type",&GDNetEvent::get_event_type);
+	ObjectTypeDB::bind_method("get_time",&GDNetEvent::get_time);
 	ObjectTypeDB::bind_method("get_peer_id",&GDNetEvent::get_peer_id);
 	ObjectTypeDB::bind_method("get_channel_id",&GDNetEvent::get_channel_id);
 	ObjectTypeDB::bind_method("get_packet",&GDNetEvent::get_packet);

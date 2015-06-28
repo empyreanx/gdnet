@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "os/thread.h"
+#include "os/os.h"
 #include "reference.h"
 
 #include "enet/enet.h"
@@ -26,7 +27,7 @@ class GDNetHost : public Reference {
 	friend class GDNetPeer;
 
 	enum {
-		THREAD_LOOP_WAIT = 1,
+		DEFAULT_EVENT_WAIT = 1,
 		DEFAULT_MAX_PEERS = 32
 	};
 	
@@ -34,6 +35,7 @@ class GDNetHost : public Reference {
 	volatile bool _running;
 	Thread* _thread;
 	
+	int _event_wait;
 	int _max_peers;
 	int _max_channels;
 	int _max_bandwidth_in;
@@ -60,6 +62,7 @@ public:
 
 	Ref<GDNetPeer> get_peer(unsigned id);
 
+	void set_event_wait(int ms) { _event_wait = ms; }
 	void set_max_peers(int max) { _max_peers = max; }
 	void set_max_channels(int max) { _max_channels = max; }
 	void set_max_bandwidth_in(int max) { _max_bandwidth_in = max; }
@@ -70,8 +73,8 @@ public:
 
 	Ref<GDNetPeer> connect(Ref<GDNetAddress> addr = NULL, int data = 0);
 
-	void broadcast_packet(const ByteArray& packet, int channel_id, int type = GDNetMessage::UNSEQUENCED);
-	void broadcast_var(const Variant& var, int channel_id, int type = GDNetMessage::UNSEQUENCED);
+	void broadcast_packet(const ByteArray& packet, int channel_id = 0, int type = GDNetMessage::UNSEQUENCED);
+	void broadcast_var(const Variant& var, int channel_id = 0, int type = GDNetMessage::UNSEQUENCED);
 
 	bool is_event_available();
 	int get_event_count();
