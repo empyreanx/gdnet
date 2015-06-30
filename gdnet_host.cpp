@@ -34,6 +34,10 @@ void GDNetHost::thread_callback(void *instance) {
 	reinterpret_cast<GDNetHost*>(instance)->thread_loop();
 }
 
+int GDNetHost::get_peer_id(ENetPeer* peer) {
+	return (int)(peer - _host->peers);
+}
+
 void GDNetHost::send_messages() {
 	while (!_message_queue.is_empty()) {
 		GDNetMessage* message = _message_queue.pop();
@@ -76,12 +80,12 @@ void GDNetHost::poll_events() {
 		event = memnew(GDNetEvent);
 
 		event->set_time(OS::get_singleton()->get_ticks_msec());
-		
+		event->set_peer_id(get_peer_id(enet_event.peer));
+
 		switch (enet_event.type) {
 			case ENET_EVENT_TYPE_CONNECT: {
 				
 				event->set_event_type(GDNetEvent::CONNECT);
-				event->set_peer_id(enet_event.peer->incomingPeerID);
 				event->set_data(enet_event.data);
 				
 			} break;
@@ -89,7 +93,6 @@ void GDNetHost::poll_events() {
 			case ENET_EVENT_TYPE_RECEIVE: {
 			
 				event->set_event_type(GDNetEvent::RECEIVE);
-				event->set_peer_id(enet_event.peer->incomingPeerID);
 				event->set_channel_id(enet_event.channelID);
 				
 				ENetPacket* enet_packet = enet_event.packet;
@@ -109,7 +112,6 @@ void GDNetHost::poll_events() {
 			case ENET_EVENT_TYPE_DISCONNECT: {
 				
 				event->set_event_type(GDNetEvent::DISCONNECT);
-				event->set_peer_id(enet_event.peer->incomingPeerID);
 				event->set_data(enet_event.data);
 				
 			} break;

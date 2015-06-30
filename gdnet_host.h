@@ -54,6 +54,8 @@ class GDNetHost : public Reference {
 	void thread_loop();
 	void thread_stop();
 
+	int get_peer_id(ENetPeer *peer);
+
 protected:
 
 	static void _bind_methods();
@@ -61,6 +63,8 @@ protected:
 public:
 
 	GDNetHost();
+
+	
 
 	Ref<GDNetPeer> get_peer(unsigned id);
 
