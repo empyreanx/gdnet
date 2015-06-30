@@ -12,10 +12,6 @@ GDNetPeer::~GDNetPeer() {
 
 int GDNetPeer::get_peer_id() {
 	ERR_FAIL_COND_V(_host->_host == NULL, -1);
-	
-	//return _peer->incomingPeerID;
-	
-	//this should be equivalent to the above, but explicitly determine the index just to be safe
 	return (int)(_peer - _host->_host->peers);
 }
 
@@ -74,6 +70,7 @@ void GDNetPeer::send_packet(const ByteArray& packet, int channel_id, int type) {
 	ERR_FAIL_COND(_host->_host == NULL);
 	
 	GDNetMessage* message = memnew(GDNetMessage((GDNetMessage::Type)type));
+	message->set_peer_id(get_peer_id());
 	message->set_channel_id(channel_id);
 	message->set_packet(packet);
 	_host->_message_queue.push(message);
@@ -89,6 +86,7 @@ void GDNetPeer::send_var(const Variant& var, int channel_id, int type) {
 	ERR_FAIL_COND(err != OK || len == 0);
 	
 	GDNetMessage* message = memnew(GDNetMessage((GDNetMessage::Type)type));
+	message->set_peer_id(get_peer_id());
 	message->set_channel_id(channel_id);
 	
 	ByteArray packet;
