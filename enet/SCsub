@@ -2,7 +2,10 @@
 Import('env')
 
 if (env['platform'] == 'windows'):
-	env.Append(LIBS=['ws2_32'])
+	if (env['CC'] == 'cl'):
+		env.Append(LINKFLAGS=["ws2_32.lib"])
+	else: # gcc mostly
+		env.Append(LIBS=['ws2_32'])
 
 local_env = env.Clone()
 
