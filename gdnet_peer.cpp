@@ -26,6 +26,11 @@ Ref<GDNetAddress> GDNetPeer::get_address() {
 	return address;
 }
 
+int GDNetPeer::get_round_trip_time() {
+	ERR_FAIL_COND_V(_host->_host == NULL, -1);
+	return _peer->roundTripTime;
+}
+
 void GDNetPeer::ping() {
 	ERR_FAIL_COND(_host->_host == NULL);
 	
@@ -125,6 +130,7 @@ void GDNetPeer::send_var(const Variant& var, int channel_id, int type) {
 void GDNetPeer::_bind_methods() {
 	ObjectTypeDB::bind_method("get_peer_id",&GDNetPeer::get_peer_id);
 	ObjectTypeDB::bind_method("get_address",&GDNetPeer::get_address);
+	ObjectTypeDB::bind_method("get_round_trip_time",&GDNetPeer::get_round_trip_time);
 	ObjectTypeDB::bind_method("ping",&GDNetPeer::ping);
 	ObjectTypeDB::bind_method("reset",&GDNetPeer::reset);
 	ObjectTypeDB::bind_method("disconnect",&GDNetPeer::disconnect,DEFVAL(0));

@@ -35,6 +35,8 @@ public:
 	
 	Ref<GDNetAddress> get_address();
 	
+	int get_round_trip_time();
+	
 	void ping();
 	void reset();
 	
