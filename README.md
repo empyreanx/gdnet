@@ -40,27 +40,33 @@ func _init():
 func _iteration(delta):
 	if (client1.is_event_available()):
 		var event = client1.get_event()
+		
 		if (event.get_event_type() == GDNetEvent.CONNECT):
 			print("Client1 connected")
 			peer1.send_var("Hello from client 1", 0)
+			
 		if (event.get_event_type() == GDNetEvent.RECEIVE):
 			print(event.get_var())
 
 	if (client2.is_event_available()):
 		var event = client2.get_event()
+		
 		if (event.get_event_type() == GDNetEvent.CONNECT):
 			print("Client2 connected")
 			peer2.send_var("Hello from client 2", 0)
+			
 		if (event.get_event_type() == GDNetEvent.RECEIVE):
 			print(event.get_var())
 
 	if (server.is_event_available()):
 		var event = server.get_event()
+		
 		if (event.get_event_type() == GDNetEvent.CONNECT):
 			var peer = server.get_peer(event.get_peer_id())
 			var address = peer.get_address();
 			print("Peer connected from ", address.get_host(), ":", address.get_port())
 			peer.send_var(str("Hello from server to peer ", event.get_peer_id()), 0)
+			
 		elif (event.get_event_type() == GDNetEvent.RECEIVE):
 			print(event.get_var())
 			server.broadcast_var("Server broadcast", 0)
@@ -118,17 +124,22 @@ Server broadcast
 
 #### GDNetPeer
 
+These methods should be called after a successful connection is established, that is, only after a `GDNetEvent.CONNECT` event is consumed.
+
 - **get_peer_id():Integer**
 - **get_address():GDNetAddress**
 - **ping()** - sends a ping to the remote peer
+- **get_avg_rtt** - Average Round Trip Time (RTT). Note, this value is initially 500 ms and will be adjusted by traffic or pings.
 - **reset()** - forcefully disconnect a peer (foreign host is not notified)
 - **disconnect(data:Integer)** - request a disconnection from a peer (data default: 0)
 - **disconnect_later(data:Integer)** - request disconnection after all queued packets have been sent (data default: 0)
 - **disconnect_now(data:Integer)** - forcefully disconnect peer (notification is sent, but not guaranteed to arrive) (data default: 0)
 - **send_packet(packet:RawArray, channel_id:int, type:int)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
 - **send_var(var:Variant, channel_id:Integer, type:Integer)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
-- **set_timeout(limit:int, min_timeout:Integer, max_timeout:Integer)
-	- limit 
+- **set_timeout(limit:int, min_timeout:Integer, max_timeout:Integer)** 
+	- **limit** - A factor that is multiplied with a value that based on the average round trip time to compute the timeout limit.
+	- **min_timeout** - Timeout value, in milliseconds, that a reliable packet has to be acknowledged if the variable timeout limit was exceeded before dropping the peer.
+	- **max_timeout** - Fixed timeout in milliseconds for which any packet has to be acknowledged before dropping the peer.
 
 ## License
 Copyright (c) 2015 James McLean  
