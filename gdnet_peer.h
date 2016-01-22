@@ -35,7 +35,7 @@ public:
 	
 	Ref<GDNetAddress> get_address();
 	
-	int get_round_trip_time();
+	int get_avg_rtt();
 	
 	void ping();
 	void reset();
@@ -46,6 +46,8 @@ public:
 	
 	void send_packet(const ByteArray& packet, int channel_id = 0, int type = GDNetMessage::UNSEQUENCED);
 	void send_var(const Variant& var, int channel_id = 0, int type = GDNetMessage::UNSEQUENCED);
+	
+	void set_timeout(int limit, int min_timeout, int max_timeout);
 };
 
 #endif

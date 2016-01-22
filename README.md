@@ -126,7 +126,9 @@ Server broadcast
 - **disconnect_later(data:Integer)** - request disconnection after all queued packets have been sent (data default: 0)
 - **disconnect_now(data:Integer)** - forcefully disconnect peer (notification is sent, but not guaranteed to arrive) (data default: 0)
 - **send_packet(packet:RawArray, channel_id:int, type:int)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
-- **send_var(var:Variant, channel_id:int, type:int)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
+- **send_var(var:Variant, channel_id:Integer, type:Integer)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
+- **set_timeout(limit:int, min_timeout:Integer, max_timeout:Integer)
+	- limit 
 
 ## License
 Copyright (c) 2015 James McLean  

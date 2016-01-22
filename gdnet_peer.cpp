@@ -26,7 +26,7 @@ Ref<GDNetAddress> GDNetPeer::get_address() {
 	return address;
 }
 
-int GDNetPeer::get_round_trip_time() {
+int GDNetPeer::get_avg_rtt() {
 	ERR_FAIL_COND_V(_host->_host == NULL, -1);
 	return _peer->roundTripTime;
 }
@@ -127,15 +127,20 @@ void GDNetPeer::send_var(const Variant& var, int channel_id, int type) {
 	_host->_message_queue.push(message);
 }
 
+void GDNetPeer::set_timeout(int limit, int min_timeout, int max_timeout) {
+	enet_peer_timeout(_peer, limit, min_timeout, max_timeout);
+}
+
 void GDNetPeer::_bind_methods() {
-	ObjectTypeDB::bind_method("get_peer_id",&GDNetPeer::get_peer_id);
-	ObjectTypeDB::bind_method("get_address",&GDNetPeer::get_address);
-	ObjectTypeDB::bind_method("get_round_trip_time",&GDNetPeer::get_round_trip_time);
-	ObjectTypeDB::bind_method("ping",&GDNetPeer::ping);
-	ObjectTypeDB::bind_method("reset",&GDNetPeer::reset);
-	ObjectTypeDB::bind_method("disconnect",&GDNetPeer::disconnect,DEFVAL(0));
-	ObjectTypeDB::bind_method("disconnect_later",&GDNetPeer::disconnect_later,DEFVAL(0));
-	ObjectTypeDB::bind_method("disconnect_now",&GDNetPeer::disconnect_now,DEFVAL(0));
-	ObjectTypeDB::bind_method("send_packet",&GDNetPeer::send_packet,DEFVAL(0),DEFVAL(GDNetMessage::UNSEQUENCED));
-	ObjectTypeDB::bind_method("send_var",&GDNetPeer::send_var,DEFVAL(0),DEFVAL(GDNetMessage::UNSEQUENCED));
+	ObjectTypeDB::bind_method("get_peer_id", &GDNetPeer::get_peer_id);
+	ObjectTypeDB::bind_method("get_address", &GDNetPeer::get_address);
+	ObjectTypeDB::bind_method("get_avg_rtt", &GDNetPeer::get_avg_rtt);
+	ObjectTypeDB::bind_method("ping", &GDNetPeer::ping);
+	ObjectTypeDB::bind_method("reset", &GDNetPeer::reset);
+	ObjectTypeDB::bind_method("disconnect", &GDNetPeer::disconnect,DEFVAL(0));
+	ObjectTypeDB::bind_method("disconnect_later", &GDNetPeer::disconnect_later,DEFVAL(0));
+	ObjectTypeDB::bind_method("disconnect_now", &GDNetPeer::disconnect_now,DEFVAL(0));
+	ObjectTypeDB::bind_method("send_packet", &GDNetPeer::send_packet,DEFVAL(0),DEFVAL(GDNetMessage::UNSEQUENCED));
+	ObjectTypeDB::bind_method("send_var", &GDNetPeer::send_var,DEFVAL(0),DEFVAL(GDNetMessage::UNSEQUENCED));
+	ObjectTypeDB::bind_method("set_timeout", &GDNetPeer::set_timeout);
 }
