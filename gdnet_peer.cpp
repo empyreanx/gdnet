@@ -128,7 +128,15 @@ void GDNetPeer::send_var(const Variant& var, int channel_id, int type) {
 }
 
 void GDNetPeer::set_timeout(int limit, int min_timeout, int max_timeout) {
-	enet_peer_timeout(_peer, limit, min_timeout, max_timeout);
+	ERR_FAIL_COND(_host->_host == NULL);
+	
+	while (true) {
+		if (_host->_mutex->try_lock() == 0) {
+			enet_peer_timeout(_peer, limit, min_timeout, max_timeout);
+			_host->_mutex->unlock();
+			break;
+		}
+	}
 }
 
 void GDNetPeer::_bind_methods() {
