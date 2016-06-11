@@ -2,9 +2,9 @@
 
 #include "gdnet_message.h"
 
-GDNetMessage::GDNetMessage(Type type) : 
+GDNetMessage::GDNetMessage(Type type) :
 	_type(type),
-	_broadcast(false), 
+	_broadcast(false),
 	_peer_id(0),
 	_channel_id(0) {
 }
