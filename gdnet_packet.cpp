@@ -2,13 +2,15 @@
 
 #include "gdnet_packet.h"
 
+#include <stdio.h>
+
 GDNetPacket::GDNetPacket() : _pos(0) {
 	int n = 1;
 	_littleEndian = (*reinterpret_cast<char*>(&n) == 1);
 }
 
 void GDNetPacket::reset_pos() {
-	_pos = _data.size() - 1;
+	_pos = 0;
 }
 
 int GDNetPacket::size() {
@@ -19,18 +21,16 @@ void GDNetPacket::put_back(void *data, int size) {
 	_data.resize(_data.size() + size);
 
 	ByteArray::Write w = _data.write();
-	memcpy(w.ptr(), data, size);
-
-	_pos += size;
+	memcpy(w.ptr() + _data.size() - size, data, size);
 }
 
 void GDNetPacket::get_front(void *data, int size) {
 	ERR_FAIL_COND(_data.size() < size);
 
 	ByteArray::Read r = _data.read();
-	memcpy(data, r.ptr() - size + 1, size);
+	memcpy(data, r.ptr() + _pos, size);
 
-	_pos -= size;
+	_pos += size;
 }
 
 void GDNetPacket::push_int8(int8_t value) {
@@ -39,7 +39,7 @@ void GDNetPacket::push_int8(int8_t value) {
 
 void GDNetPacket::push_int16(int16_t value) {
 	int16_t data = ENET_HOST_TO_NET_16(value);
-	put_back(&data, sizeof(int16_t));
+	put_back(&data, sizeof(value));
 }
 
 void GDNetPacket::push_int32(int32_t value) {
@@ -71,8 +71,8 @@ void GDNetPacket::push_uint8(uint8_t value) {
 }
 
 void GDNetPacket::push_uint16(uint16_t value) {
-	int16_t data = ENET_HOST_TO_NET_16(value);
-	put_back(&data, sizeof(int16_t));
+	uint16_t data = ENET_HOST_TO_NET_16(value);
+	put_back(&data, sizeof(value));
 }
 
 void GDNetPacket::push_uint32(uint32_t value) {
@@ -150,9 +150,9 @@ uint16_t GDNetPacket::pop_uint16() {
 }
 
 uint32_t GDNetPacket::pop_uint32() {
-	uint16_t value;
+	uint32_t value;
 	get_front(&value, sizeof(value));
-	return ENET_NET_TO_HOST_16(value);
+	return ENET_NET_TO_HOST_32(value);
 }
 
 uint64_t GDNetPacket::pop_uint64() {
@@ -185,4 +185,14 @@ void GDNetPacket::_bind_methods() {
 	ObjectTypeDB::bind_method("push_uint16", &GDNetPacket::push_uint16);
 	ObjectTypeDB::bind_method("push_uint32", &GDNetPacket::push_uint32);
 	ObjectTypeDB::bind_method("push_uint64", &GDNetPacket::push_uint64);
+
+	ObjectTypeDB::bind_method("pop_int8", &GDNetPacket::pop_int8);
+	ObjectTypeDB::bind_method("pop_int16", &GDNetPacket::pop_int16);
+	ObjectTypeDB::bind_method("pop_int32", &GDNetPacket::pop_int32);
+	ObjectTypeDB::bind_method("pop_int64", &GDNetPacket::pop_int64);
+
+	ObjectTypeDB::bind_method("pop_uint8", &GDNetPacket::pop_uint8);
+	ObjectTypeDB::bind_method("pop_uint16", &GDNetPacket::pop_uint16);
+	ObjectTypeDB::bind_method("pop_uint32", &GDNetPacket::pop_uint32);
+	ObjectTypeDB::bind_method("pop_uint64", &GDNetPacket::pop_uint64);
 }

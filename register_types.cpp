@@ -10,14 +10,16 @@
 #include "gdnet_event.h"
 #include "gdnet_message.h"
 #include "gdnet_peer.h"
+#include "gdnet_packet.h"
 
 void register_gdnet_types() {
 	ObjectTypeDB::register_virtual_type<GDNetPeer>();
 	ObjectTypeDB::register_virtual_type<GDNetEvent>();
 	ObjectTypeDB::register_virtual_type<GDNetMessage>();
+	ObjectTypeDB::register_type<GDNetPacket>();
 	ObjectTypeDB::register_type<GDNetHost>();
 	ObjectTypeDB::register_type<GDNetAddress>();
-	
+
 	if (enet_initialize() != 0)
 		ERR_EXPLAIN("Unable to initialize ENet");
 }
