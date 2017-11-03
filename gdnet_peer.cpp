@@ -18,11 +18,11 @@ int GDNetPeer::get_peer_id() {
 Ref<GDNetAddress> GDNetPeer::get_address() {
 	Ref<GDNetAddress> address = memnew(GDNetAddress);
 	address->set_port(_peer->address.port);
-	
+
 	char ip[64];
 	enet_address_get_host_ip(&_peer->address, ip, 64);
 	address->set_host(ip);
-	
+
 	return address;
 }
 
@@ -33,67 +33,47 @@ int GDNetPeer::get_avg_rtt() {
 
 void GDNetPeer::ping() {
 	ERR_FAIL_COND(_host->_host == NULL);
-	
-	while (true) {
-		if (_host->_mutex->try_lock() == 0) {
-			enet_peer_ping(_peer);
-			_host->_mutex->unlock();
-			break;
-		}
-	}	
+
+	_host->_mutex->lock();
+	enet_peer_ping(_peer);
+	_host->_mutex->unlock();
 }
 
 void GDNetPeer::reset() {
 	ERR_FAIL_COND(_host->_host == NULL);
-	
-	while (true) {
-		if (_host->_mutex->try_lock() == 0) {
-			enet_peer_reset(_peer);
-			_host->_mutex->unlock();
-			break;
-		}
-	}
+
+	_host->_mutex->lock();
+	enet_peer_reset(_peer);
+	_host->_mutex->unlock();
 }
 
 void GDNetPeer::disconnect(int data) {
 	ERR_FAIL_COND(_host->_host == NULL);
-	
-	while (true) {
-		if (_host->_mutex->try_lock() == 0) {
-			enet_peer_disconnect(_peer, data);
-			_host->_mutex->unlock();
-			break;
-		}
-	}	
+
+	_host->_mutex->lock();
+	enet_peer_disconnect(_peer, data);
+	_host->_mutex->unlock();
 }
 
 void GDNetPeer::disconnect_later(int data) {
 	ERR_FAIL_COND(_host->_host == NULL);
-	
-	while (true) {
-		if (_host->_mutex->try_lock() == 0) {
-			enet_peer_disconnect_later(_peer, data);
-			_host->_mutex->unlock();
-			break;
-		}
-	}
+
+	_host->_mutex->lock();
+	enet_peer_disconnect_later(_peer, data);
+	_host->_mutex->unlock();
 }
 
 void GDNetPeer::disconnect_now(int data) {
 	ERR_FAIL_COND(_host->_host == NULL);
-	
-	while (true) {
-		if (_host->_mutex->try_lock() == 0) {
-			enet_peer_disconnect_now(_peer, data);
-			_host->_mutex->unlock();
-			break;
-		}
-	}	
+
+	_host->_mutex->lock();
+	enet_peer_disconnect_now(_peer, data);
+	_host->_mutex->unlock();
 }
 
 void GDNetPeer::send_packet(const ByteArray& packet, int channel_id, int type) {
 	ERR_FAIL_COND(_host->_host == NULL);
-	
+
 	GDNetMessage* message = memnew(GDNetMessage((GDNetMessage::Type)type));
 	message->set_peer_id(get_peer_id());
 	message->set_channel_id(channel_id);
@@ -103,40 +83,36 @@ void GDNetPeer::send_packet(const ByteArray& packet, int channel_id, int type) {
 
 void GDNetPeer::send_var(const Variant& var, int channel_id, int type) {
 	ERR_FAIL_COND(_host->_host == NULL);
-	
+
 	int len;
-	
+
 	Error err = encode_variant(var, NULL, len);
-	
+
 	ERR_FAIL_COND(err != OK || len == 0);
-	
+
 	GDNetMessage* message = memnew(GDNetMessage((GDNetMessage::Type)type));
 	message->set_peer_id(get_peer_id());
 	message->set_channel_id(channel_id);
-	
+
 	ByteArray packet;
 	packet.resize(len);
-	
+
 	ByteArray::Write w = packet.write();
 	err = encode_variant(var, w.ptr(), len);
-	
+
 	ERR_FAIL_COND(err != OK);
-	
+
 	message->set_packet(packet);
-	
+
 	_host->_message_queue.push(message);
 }
 
 void GDNetPeer::set_timeout(int limit, int min_timeout, int max_timeout) {
 	ERR_FAIL_COND(_host->_host == NULL);
-	
-	while (true) {
-		if (_host->_mutex->try_lock() == 0) {
-			enet_peer_timeout(_peer, limit, min_timeout, max_timeout);
-			_host->_mutex->unlock();
-			break;
-		}
-	}
+
+	_host->_mutex->lock();
+	enet_peer_timeout(_peer, limit, min_timeout, max_timeout);
+	_host->_mutex->unlock();
 }
 
 void GDNetPeer::_bind_methods() {
