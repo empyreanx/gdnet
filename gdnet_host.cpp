@@ -138,7 +138,7 @@ void GDNetHost::thread_loop() {
 		uint32_t start = OS::get_singleton()->get_ticks_msec();
 		send_messages();
 		poll_events();
-		uint32_t elapsed = start - OS::get_singleton()->get_ticks_msec();
+		uint32_t elapsed = OS::get_singleton()->get_ticks_msec() - start;
 		_mutex->unlock();
 
 		if ((int)elapsed < _interval) {
