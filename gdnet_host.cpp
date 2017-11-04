@@ -5,10 +5,10 @@ GDNetHost::GDNetHost() :
 	_running(false),
 	_thread(NULL),
 	_mutex(NULL),
-	_interval(DEFAULT_INTERVAL),
-	_event_wait(DEFAULT_EVENT_WAIT),
+	_delay(DEFAULT_DELAY),
+	_event_wait(DEFAULT_EVENT_WAIT), // Deprecated
 	_max_peers(DEFAULT_MAX_PEERS),
-	_max_channels(1),
+	_max_channels(DEFAULT_MAX_CHANNELS),
 	_max_bandwidth_in(0),
 	_max_bandwidth_out(0) {
 }
@@ -135,15 +135,10 @@ void GDNetHost::poll_events() {
 void GDNetHost::thread_loop() {
 	while (_running) {
 		_mutex->lock();
-		uint32_t start = OS::get_singleton()->get_ticks_msec();
 		send_messages();
 		poll_events();
-		uint32_t elapsed = OS::get_singleton()->get_ticks_msec() - start;
 		_mutex->unlock();
-
-		if ((int)elapsed < _interval) {
-			OS::get_singleton()->delay_usec((_interval - elapsed) * 1000);
-		}
+		OS::get_singleton()->delay_usec(_delay);
 	}
 }
 
@@ -266,8 +261,8 @@ Ref<GDNetEvent> GDNetHost::get_event() {
 void GDNetHost::_bind_methods() {
 	ObjectTypeDB::bind_method("get_peer",&GDNetHost::get_peer);
 
-	ObjectTypeDB::bind_method("set_interval",&GDNetHost::set_interval);
-	ObjectTypeDB::bind_method("set_event_wait",&GDNetHost::set_event_wait);
+	ObjectTypeDB::bind_method("set_delay",&GDNetHost::set_delay);
+	ObjectTypeDB::bind_method("set_event_wait",&GDNetHost::set_event_wait); // Deprecated
 	ObjectTypeDB::bind_method("set_max_peers",&GDNetHost::set_max_peers);
 	ObjectTypeDB::bind_method("set_max_channels",&GDNetHost::set_max_channels);
 	ObjectTypeDB::bind_method("set_max_bandwidth_in",&GDNetHost::set_max_bandwidth_in);

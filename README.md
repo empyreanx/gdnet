@@ -40,33 +40,33 @@ func _init():
 func _iteration(delta):
 	if (client1.is_event_available()):
 		var event = client1.get_event()
-		
+
 		if (event.get_event_type() == GDNetEvent.CONNECT):
 			print("Client1 connected")
 			peer1.send_var("Hello from client 1", 0)
-			
+
 		if (event.get_event_type() == GDNetEvent.RECEIVE):
 			print(event.get_var())
 
 	if (client2.is_event_available()):
 		var event = client2.get_event()
-		
+
 		if (event.get_event_type() == GDNetEvent.CONNECT):
 			print("Client2 connected")
 			peer2.send_var("Hello from client 2", 0)
-			
+
 		if (event.get_event_type() == GDNetEvent.RECEIVE):
 			print(event.get_var())
 
 	if (server.is_event_available()):
 		var event = server.get_event()
-		
+
 		if (event.get_event_type() == GDNetEvent.CONNECT):
 			var peer = server.get_peer(event.get_peer_id())
 			var address = peer.get_address();
 			print("Peer connected from ", address.get_host(), ":", address.get_port())
 			peer.send_var(str("Hello from server to peer ", event.get_peer_id()), 0)
-			
+
 		elif (event.get_event_type() == GDNetEvent.RECEIVE):
 			print(event.get_var())
 			server.broadcast_var("Server broadcast", 0)
@@ -109,6 +109,7 @@ Server broadcast
 #### GDNetHost
 
 - **get_peer(id:Integer):GDNetPeer**
+- **set_delay(id:Integer)** - sets the sleep period after polling for events in microseconds (default: 1000 usecs)
 - **set_max_peers(max:Integer)** - must be called before `bind` (default: 32)
 - **set_max_channels(max:Integer)** - must be called before `bind` (default: 1)
 - **set_max_bandwidth_in(max:Integer)** - measured in bytes/sec, must be called before `bind` (default: unlimited)
@@ -136,7 +137,7 @@ These methods should be called after a successful connection is established, tha
 - **disconnect_now(data:Integer)** - forcefully disconnect peer (notification is sent, but not guaranteed to arrive) (data default: 0)
 - **send_packet(packet:RawArray, channel_id:int, type:int)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
 - **send_var(var:Variant, channel_id:Integer, type:Integer)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
-- **set_timeout(limit:int, min_timeout:Integer, max_timeout:Integer)** 
+- **set_timeout(limit:int, min_timeout:Integer, max_timeout:Integer)**
 	- **limit** - A factor that is multiplied with a value that based on the average round trip time to compute the timeout limit.
 	- **min_timeout** - Timeout value, in milliseconds, that a reliable packet has to be acknowledged if the variable timeout limit was exceeded before dropping the peer.
 	- **max_timeout** - Fixed timeout in milliseconds for which any packet has to be acknowledged before dropping the peer.
