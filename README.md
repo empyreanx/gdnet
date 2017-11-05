@@ -109,7 +109,7 @@ Server broadcast
 #### GDNetHost
 
 - **get_peer(id:Integer):GDNetPeer**
-- **set_delay(id:Integer)** - sets the sleep period after polling for events in microseconds (default: 1000 usecs)
+- **set_event_wait(id:Integer)** - sets the duration of time ENet will wait (block) for events (default: 1 ms)
 - **set_max_peers(max:Integer)** - must be called before `bind` (default: 32)
 - **set_max_channels(max:Integer)** - must be called before `bind` (default: 1)
 - **set_max_bandwidth_in(max:Integer)** - measured in bytes/sec, must be called before `bind` (default: unlimited)

@@ -28,8 +28,7 @@ class GDNetHost : public Reference {
 	friend class GDNetPeer;
 
 	enum {
-		DEFAULT_DELAY = 1000,
-		DEFAULT_EVENT_WAIT = 1,  // Deprecated
+		DEFAULT_EVENT_WAIT = 1,
 		DEFAULT_MAX_PEERS = 32,
 		DEFAULT_MAX_CHANNELS = 1,
 	};
@@ -37,10 +36,10 @@ class GDNetHost : public Reference {
 	ENetHost* _host;
 	volatile bool _running;
 	Thread* _thread;
-	Mutex* _mutex;
+	Mutex* _accessMutex;
+	Mutex* _hostMutex;
 
-	unsigned _delay;
-	int _event_wait; // Deprecated
+	int _event_wait;
 	int _max_peers;
 	int _max_channels;
 	int _max_bandwidth_in;
@@ -57,6 +56,9 @@ class GDNetHost : public Reference {
 	void thread_loop();
 	void thread_stop();
 
+	void acquireMutex();
+	void releaseMutex();
+
 	int get_peer_id(ENetPeer *peer);
 	GDNetEvent* new_event(const ENetEvent& enet_event);
 
@@ -70,8 +72,7 @@ public:
 
 	Ref<GDNetPeer> get_peer(unsigned id);
 
-	void set_delay(unsigned delay) { _delay = delay; }
-	void set_event_wait(int wait) { _event_wait = wait; } // Deprecated
+	void set_event_wait(int wait) { _event_wait = wait; }
 	void set_max_peers(int max) { _max_peers = max; }
 	void set_max_channels(int max) { _max_channels = max; }
 	void set_max_bandwidth_in(int max) { _max_bandwidth_in = max; }
