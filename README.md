@@ -15,7 +15,7 @@ Simply drop the `gdnet` directory in your `godot/modules` directory and build fo
 ## Example
 
 ```python
-extends MainLoop
+extends Node
 
 var client1 = null
 var client2 = null
@@ -39,7 +39,7 @@ func _init():
 	client2.bind()
 	peer2 = client2.connect(address)
 
-func _iteration(delta):
+func _process(delta):
 	if (client1.is_event_available()):
 		var event = client1.get_event()
 
