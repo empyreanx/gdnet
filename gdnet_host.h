@@ -10,7 +10,7 @@
 #include "os/os.h"
 #include "reference.h"
 
-#include "enet/enet.h"
+#include "penet/penet.h"
 
 #include "gdnet_address.h"
 #include "gdnet_event.h"
@@ -23,7 +23,7 @@ class GDNetPeer;
 
 class GDNetHost : public Reference {
 
-	OBJ_TYPE(GDNetHost,Reference);
+	GDCLASS(GDNetHost,Reference);
 
 	friend class GDNetPeer;
 
@@ -33,7 +33,7 @@ class GDNetHost : public Reference {
 		DEFAULT_MAX_CHANNELS = 1,
 	};
 
-	ENetHost* _host;
+	PENetHost* _host;
 	volatile bool _running;
 	Thread* _thread;
 	Mutex* _accessMutex;
@@ -59,8 +59,8 @@ class GDNetHost : public Reference {
 	void acquireMutex();
 	void releaseMutex();
 
-	int get_peer_id(ENetPeer *peer);
-	GDNetEvent* new_event(const ENetEvent& enet_event);
+	int get_peer_id(PENetPeer *peer);
+	GDNetEvent* new_event(const PENetEvent& penet_event);
 
 protected:
 
@@ -81,9 +81,9 @@ public:
 	Error bind(Ref<GDNetAddress> addr);
 	void unbind();
 
-	Ref<GDNetPeer> connect(Ref<GDNetAddress> addr = NULL, int data = 0);
+	Ref<GDNetPeer> gdnet_connect(Ref<GDNetAddress> addr = NULL, int data = 0);
 
-	void broadcast_packet(const ByteArray& packet, int channel_id = 0, int type = GDNetMessage::UNSEQUENCED);
+	void broadcast_packet(const PoolByteArray& packet, int channel_id = 0, int type = GDNetMessage::UNSEQUENCED);
 	void broadcast_var(const Variant& var, int channel_id = 0, int type = GDNetMessage::UNSEQUENCED);
 
 	bool is_event_available();
