@@ -42,7 +42,7 @@ func _process(delta):
 
 		if (event.get_event_type() == GDNetEvent.RECEIVE):
 			print(event.get_var())
-			peer1.disconnect()
+			peer1.gdnet_disconnect()
 
 	if (server.is_event_available()):
 		var event = server.get_event()
