@@ -2,7 +2,7 @@
 
 An [ENet](http://enet.bespin.org/) wrapper for Godot.
 
-GDNet for Godot 3. If you need to use GDNet for godot 2.1+, you can find it [here](https://github.com/empyreanx/gdnet).
+GDNet for Godot 3. If you need to use GDNet for Godot 2.1+, you can find it [here](https://github.com/empyreanx/gdnet).
 
 ## About
 
@@ -118,7 +118,7 @@ Server broadcast
 - **set_max_bandwidth_out(max:Integer)** - measured in bytes/sec, must be called before `bind` (default: unlimited)
 - **bind(addr:GDNetAddress)** - starts the host (the system determines the interface/port to bind if `addr` is empty)
 - **unbind()** - stops the host
-- **connect(addr:GDNetAddress, data:Integer):GDNetPeer** - attempt to connect to a remote host (data default: 0)
+- **gdnet_connect(addr:GDNetAddress, data:Integer):GDNetPeer** - attempt to connect to a remote host (data default: 0)
 - **broadcast_packet(packet:RawArray, channel_id:Integer, type:Integer)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
 - **broadcast_var(var:Variant, channel_id:Integer, type:Integer)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
 - **is_event_available():Boolean** - returns `true` if there is an event in the queue
@@ -134,7 +134,7 @@ These methods should be called after a successful connection is established, tha
 - **ping()** - sends a ping to the remote peer
 - **get_avg_rtt** - Average Round Trip Time (RTT). Note, this value is initially 500 ms and will be adjusted by traffic or pings.
 - **reset()** - forcefully disconnect a peer (foreign host is not notified)
-- **disconnect(data:Integer)** - request a disconnection from a peer (data default: 0)
+- **gdnet_disconnect(data:Integer)** - request a disconnection from a peer (data default: 0)
 - **disconnect_later(data:Integer)** - request disconnection after all queued packets have been sent (data default: 0)
 - **disconnect_now(data:Integer)** - forcefully disconnect peer (notification is sent, but not guaranteed to arrive) (data default: 0)
 - **send_packet(packet:RawArray, channel_id:int, type:int)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
