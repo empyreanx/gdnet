@@ -49,7 +49,7 @@ void GDNetHost::releaseMutex() {
 	_hostMutex->unlock();
 }
 
-int GDNetHost::get_peer_id(ENetPeer* peer) {
+int GDNetHost::get_peer_id(PENetPeer* peer) {
 	return (int)(peer - _host->peers);
 }
 
@@ -61,25 +61,25 @@ void GDNetHost::send_messages() {
 
 		switch (message->get_type()) {
 			case GDNetMessage::UNSEQUENCED:
-				flags |= ENET_PACKET_FLAG_UNSEQUENCED;
+				flags |= PENET_PACKET_FLAG_UNSEQUENCED;
 				break;
 
 			case GDNetMessage::RELIABLE:
-				flags |= ENET_PACKET_FLAG_RELIABLE;
+				flags |= PENET_PACKET_FLAG_RELIABLE;
 				break;
 
 			default:
 				break;
 		}
 
-		ByteArray::Read r = message->get_packet().read();
-		ENetPacket * enet_packet = enet_packet_create(r.ptr(), message->get_packet().size(), flags);
+		PoolByteArray::Read r = message->get_packet().read();
+		PENetPacket * penet_packet = penet_packet_create(r.ptr(), message->get_packet().size(), flags);
 
-		if (enet_packet != NULL) {
+		if (penet_packet != NULL) {
 			if (message->is_broadcast()) {
-				enet_host_broadcast(_host, message->get_channel_id(), enet_packet);
+				penet_host_broadcast(_host, message->get_channel_id(), penet_packet);
 			} else {
-				enet_peer_send(&_host->peers[message->get_peer_id()], message->get_channel_id(), enet_packet);
+				penet_peer_send(&_host->peers[message->get_peer_id()], message->get_channel_id(), penet_packet);
 			}
 		}
 
@@ -87,43 +87,43 @@ void GDNetHost::send_messages() {
 	}
 }
 
-GDNetEvent* GDNetHost::new_event(const ENetEvent& enet_event) {
+GDNetEvent* GDNetHost::new_event(const PENetEvent& penet_event) {
 	GDNetEvent* event = memnew(GDNetEvent);
 
 	event->set_time(OS::get_singleton()->get_ticks_msec());
-	event->set_peer_id(get_peer_id(enet_event.peer));
+	event->set_peer_id(get_peer_id(penet_event.peer));
 
-	switch (enet_event.type) {
-		case ENET_EVENT_TYPE_CONNECT: {
+	switch (penet_event.type) {
+		case PENET_EVENT_TYPE_CONNECT: {
 
 			event->set_event_type(GDNetEvent::CONNECT);
-			event->set_data(enet_event.data);
+			event->set_data(penet_event.data);
 
 		} break;
 
-		case ENET_EVENT_TYPE_RECEIVE: {
+		case PENET_EVENT_TYPE_RECEIVE: {
 
 			event->set_event_type(GDNetEvent::RECEIVE);
-			event->set_channel_id(enet_event.channelID);
+			event->set_channel_id(penet_event.channelID);
 
-			ENetPacket* enet_packet = enet_event.packet;
+			PENetPacket* penet_packet = penet_event.packet;
 
-			ByteArray packet;
-			packet.resize(enet_packet->dataLength);
+			PoolByteArray packet;
+			packet.resize(penet_packet->dataLength);
 
-			ByteArray::Write w = packet.write();
-			memcpy(w.ptr(), enet_packet->data, enet_packet->dataLength);
+			PoolByteArray::Write w = packet.write();
+			memcpy(w.ptr(), penet_packet->data, penet_packet->dataLength);
 
 			event->set_packet(packet);
 
-			enet_packet_destroy(enet_packet);
+			penet_packet_destroy(penet_packet);
 
 		} break;
 
-		case ENET_EVENT_TYPE_DISCONNECT: {
+		case PENET_EVENT_TYPE_DISCONNECT: {
 
 			event->set_event_type(GDNetEvent::DISCONNECT);
-			event->set_data(enet_event.data);
+			event->set_data(penet_event.data);
 
 		} break;
 
@@ -135,12 +135,12 @@ GDNetEvent* GDNetHost::new_event(const ENetEvent& enet_event) {
 }
 
 void GDNetHost::poll_events() {
-	ENetEvent event;
+	PENetEvent event;
 
-	if (enet_host_service(_host, &event, _event_wait) > 0) {
+	if (penet_host_service(_host, &event, _event_wait) > 0) {
 		_event_queue.push(new_event(event));
 
-		while (enet_host_check_events(_host, &event) > 0) {
+		while (penet_host_check_events(_host, &event) > 0) {
 			_event_queue.push(new_event(event));
 		}
 	}
@@ -169,23 +169,23 @@ Error GDNetHost::bind(Ref<GDNetAddress> addr) {
 	ERR_FAIL_COND_V(_host != NULL, FAILED);
 
 	if (addr.is_null()) {
-		_host = enet_host_create(NULL, _max_peers, _max_channels, _max_bandwidth_in, _max_bandwidth_out);
+		_host = penet_host_create(NULL, _max_peers, _max_channels, _max_bandwidth_in, _max_bandwidth_out);
 	} else {
 		CharString host_addr = addr->get_host().ascii();
 
-		ENetAddress enet_addr;
-		enet_addr.port = addr->get_port();
+		PENetAddress penet_addr;
+		penet_addr.port = addr->get_port();
 
 		if (host_addr.length() == 0) {
-			enet_addr.host = ENET_HOST_ANY;
+			penet_addr.host = PENET_HOST_ANY;
 		} else {
-			if (enet_address_set_host(&enet_addr, host_addr.get_data()) != 0) {
+			if (penet_address_set_host(&penet_addr, host_addr.get_data()) != 0) {
 				ERR_EXPLAIN("Unable to resolve host");
 				return FAILED;
 			}
 		}
 
-		_host = enet_host_create(&enet_addr, _max_peers, _max_channels, _max_bandwidth_in, _max_bandwidth_out);
+		_host = penet_host_create(&penet_addr, _max_peers, _max_channels, _max_bandwidth_in, _max_bandwidth_out);
 	}
 
 	ERR_FAIL_COND_V(_host == NULL, FAILED);
@@ -198,35 +198,35 @@ Error GDNetHost::bind(Ref<GDNetAddress> addr) {
 void GDNetHost::unbind() {
 	if (_host != NULL) {
 		thread_stop();
-		enet_host_flush(_host);
-		enet_host_destroy(_host);
+		penet_host_flush(_host);
+		penet_host_destroy(_host);
 		_host = NULL;
 		_message_queue.clear();
 		_event_queue.clear();
 	}
 }
 
-Ref<GDNetPeer> GDNetHost::connect(Ref<GDNetAddress> addr, int data) {
+Ref<GDNetPeer> GDNetHost::gdnet_connect(Ref<GDNetAddress> addr, int data) {
 	ERR_FAIL_COND_V(_host == NULL, NULL);
 
-	ENetAddress enet_addr;
-	enet_addr.port = addr->get_port();
+	PENetAddress penet_addr;
+	penet_addr.port = addr->get_port();
 
 	CharString host_addr = addr->get_host().ascii();
 
-	if (enet_address_set_host(&enet_addr, host_addr.get_data()) != 0) {
+	if (penet_address_set_host(&penet_addr, host_addr.get_data()) != 0) {
 		ERR_EXPLAIN("Unable to resolve host");
 		return NULL;
 	}
 
-	ENetPeer* peer = enet_host_connect(_host, &enet_addr, _max_channels, data);
+	PENetPeer* peer = penet_host_connect(_host, &penet_addr, _max_channels, data);
 
 	ERR_FAIL_COND_V(peer == NULL, NULL);
 
 	return memnew(GDNetPeer(this, peer));
 }
 
-void GDNetHost::broadcast_packet(const ByteArray& packet, int channel_id, int type) {
+void GDNetHost::broadcast_packet(const PoolByteArray& packet, int channel_id, int type) {
 	ERR_FAIL_COND(_host == NULL);
 
 	GDNetMessage* message = memnew(GDNetMessage((GDNetMessage::Type)type));
@@ -249,16 +249,11 @@ void GDNetHost::broadcast_var(const Variant& var, int channel_id, int type) {
 	message->set_broadcast(true);
 	message->set_channel_id(channel_id);
 
-	ByteArray packet;
+	PoolByteArray packet;
 	packet.resize(len);
 
-	ByteArray::Write w = packet.write();
-	err = encode_variant(var, w.ptr(), len);
-
-	ERR_FAIL_COND(err != OK);
-
-	message->set_packet(packet);
-	_message_queue.push(message);
+	PoolByteArray::Write w = packet.write();
+	err = encode_variant(var, &w[0], len);
 }
 
 bool GDNetHost::is_event_available() {
@@ -274,20 +269,20 @@ Ref<GDNetEvent> GDNetHost::get_event() {
 }
 
 void GDNetHost::_bind_methods() {
-	ObjectTypeDB::bind_method("get_peer",&GDNetHost::get_peer);
+	ClassDB::bind_method(D_METHOD("get_peer"),&GDNetHost::get_peer);
 
-	ObjectTypeDB::bind_method("set_event_wait",&GDNetHost::set_event_wait); // Deprecated
-	ObjectTypeDB::bind_method("set_max_peers",&GDNetHost::set_max_peers);
-	ObjectTypeDB::bind_method("set_max_channels",&GDNetHost::set_max_channels);
-	ObjectTypeDB::bind_method("set_max_bandwidth_in",&GDNetHost::set_max_bandwidth_in);
-	ObjectTypeDB::bind_method("set_max_bandwidth_out",&GDNetHost::set_max_bandwidth_out);
+	ClassDB::bind_method(D_METHOD("set_event_wait"),&GDNetHost::set_event_wait); // Deprecated
+	ClassDB::bind_method(D_METHOD("set_max_peers"),&GDNetHost::set_max_peers);
+	ClassDB::bind_method(D_METHOD("set_max_channels"),&GDNetHost::set_max_channels);
+	ClassDB::bind_method(D_METHOD("set_max_bandwidth_in"),&GDNetHost::set_max_bandwidth_in);
+	ClassDB::bind_method(D_METHOD("set_max_bandwidth_out"),&GDNetHost::set_max_bandwidth_out);
 
-	ObjectTypeDB::bind_method("bind",&GDNetHost::bind,DEFVAL(NULL));
-	ObjectTypeDB::bind_method("unbind",&GDNetHost::unbind);
-	ObjectTypeDB::bind_method("connect",&GDNetHost::connect,DEFVAL(0));
-	ObjectTypeDB::bind_method("broadcast_packet",&GDNetHost::broadcast_packet,DEFVAL(0),DEFVAL(GDNetMessage::UNSEQUENCED));
-	ObjectTypeDB::bind_method("broadcast_var",&GDNetHost::broadcast_var,DEFVAL(0),DEFVAL(GDNetMessage::UNSEQUENCED));
-	ObjectTypeDB::bind_method("is_event_available",&GDNetHost::is_event_available);
-	ObjectTypeDB::bind_method("get_event_count",&GDNetHost::get_event_count);
-	ObjectTypeDB::bind_method("get_event",&GDNetHost::get_event);
+	ClassDB::bind_method(D_METHOD("bind"),&GDNetHost::bind,DEFVAL(NULL));
+	ClassDB::bind_method(D_METHOD("unbind"),&GDNetHost::unbind);
+	ClassDB::bind_method(D_METHOD("gdnet_connect"),&GDNetHost::gdnet_connect,DEFVAL(0));
+	ClassDB::bind_method(D_METHOD("broadcast_packet"),&GDNetHost::broadcast_packet,DEFVAL(0),DEFVAL(GDNetMessage::UNSEQUENCED));
+	ClassDB::bind_method(D_METHOD("broadcast_var"),&GDNetHost::broadcast_var,DEFVAL(0),DEFVAL(GDNetMessage::UNSEQUENCED));
+	ClassDB::bind_method(D_METHOD("is_event_available"),&GDNetHost::is_event_available);
+	ClassDB::bind_method(D_METHOD("get_event_count"),&GDNetHost::get_event_count);
+	ClassDB::bind_method(D_METHOD("get_event"),&GDNetHost::get_event);
 }
