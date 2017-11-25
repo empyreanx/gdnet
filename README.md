@@ -4,6 +4,8 @@ An [ENet](http://enet.bespin.org/) wrapper for Godot.
 
 **NOTE: GDNet is not compatible with Godot 3.0. Please use the 2.1+ branch instead.**
 
+If you need Godot 3.0 support, there is a new branch [here](https://github.com/PerduGames/gdnet3).
+
 ## About
 
 [ENet](http://enet.bespin.org/) is a library that provides a number of features on top of UDP such as, connection handling, sequencing, reliability, channels, bandwidth throttling, packet fragmentation and reassembly. GDNet provides a (mostly) thin wrapper around ENet.
