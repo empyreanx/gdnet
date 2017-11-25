@@ -2,7 +2,7 @@
 
 An [ENet](http://enet.bespin.org/) wrapper for Godot.
 
-GDNet for Godot 3. If you need to use GDNet for godot 2.1, you can find it [here](https://github.com/empyreanx/gdnet).
+GDNet for Godot 3. If you need to use GDNet for godot 2.1+, you can find it [here](https://github.com/empyreanx/gdnet).
 
 ## About
 
