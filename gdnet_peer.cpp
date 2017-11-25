@@ -2,7 +2,7 @@
 
 #include "gdnet_peer.h"
 
-GDNetPeer::GDNetPeer(GDNetHost* host, ENetPeer* peer) : _host(host), _peer(peer) {
+GDNetPeer::GDNetPeer(GDNetHost* host, PENetPeer* peer) : _host(host), _peer(peer) {
 	_host->reference();
 }
 
@@ -20,7 +20,7 @@ Ref<GDNetAddress> GDNetPeer::get_address() {
 	address->set_port(_peer->address.port);
 
 	char ip[64];
-	enet_address_get_host_ip(&_peer->address, ip, 64);
+	penet_address_get_host_ip(&_peer->address, ip, 64);
 	address->set_host(ip);
 
 	return address;
@@ -36,7 +36,7 @@ void GDNetPeer::ping() {
 
 	_host->acquireMutex();
 
-	enet_peer_ping(_peer);
+	penet_peer_ping(_peer);
 
 	_host->releaseMutex();
 }
@@ -46,17 +46,17 @@ void GDNetPeer::reset() {
 
 	_host->acquireMutex();
 
-	enet_peer_reset(_peer);
+	penet_peer_reset(_peer);
 
 	_host->releaseMutex();
 }
 
-void GDNetPeer::disconnect(int data) {
+void GDNetPeer::gdnet_disconnect(int data) {
 	ERR_FAIL_COND(_host->_host == NULL);
 
 	_host->acquireMutex();
 
-	enet_peer_disconnect(_peer, data);
+	penet_peer_disconnect(_peer, data);
 
 	_host->releaseMutex();
 }
@@ -66,7 +66,7 @@ void GDNetPeer::disconnect_later(int data) {
 
 	_host->acquireMutex();
 
-	enet_peer_disconnect_later(_peer, data);
+	penet_peer_disconnect_later(_peer, data);
 
 	_host->releaseMutex();
 }
@@ -76,12 +76,12 @@ void GDNetPeer::disconnect_now(int data) {
 
 	_host->acquireMutex();
 
-	enet_peer_disconnect_now(_peer, data);
+	penet_peer_disconnect_now(_peer, data);
 
 	_host->releaseMutex();
 }
 
-void GDNetPeer::send_packet(const ByteArray& packet, int channel_id, int type) {
+void GDNetPeer::send_packet(const PoolByteArray& packet, int channel_id, int type) {
 	ERR_FAIL_COND(_host->_host == NULL);
 
 	GDNetMessage* message = memnew(GDNetMessage((GDNetMessage::Type)type));
@@ -104,11 +104,11 @@ void GDNetPeer::send_var(const Variant& var, int channel_id, int type) {
 	message->set_peer_id(get_peer_id());
 	message->set_channel_id(channel_id);
 
-	ByteArray packet;
+	PoolByteArray packet;
 	packet.resize(len);
 
-	ByteArray::Write w = packet.write();
-	err = encode_variant(var, w.ptr(), len);
+	PoolByteArray::Write w = packet.write();
+	err = encode_variant(var, &w[0], len);
 
 	ERR_FAIL_COND(err != OK);
 
@@ -122,21 +122,21 @@ void GDNetPeer::set_timeout(int limit, int min_timeout, int max_timeout) {
 
 	_host->acquireMutex();
 
-	enet_peer_timeout(_peer, limit, min_timeout, max_timeout);
+	penet_peer_timeout(_peer, limit, min_timeout, max_timeout);
 
 	_host->releaseMutex();
 }
 
 void GDNetPeer::_bind_methods() {
-	ObjectTypeDB::bind_method("get_peer_id", &GDNetPeer::get_peer_id);
-	ObjectTypeDB::bind_method("get_address", &GDNetPeer::get_address);
-	ObjectTypeDB::bind_method("get_avg_rtt", &GDNetPeer::get_avg_rtt);
-	ObjectTypeDB::bind_method("ping", &GDNetPeer::ping);
-	ObjectTypeDB::bind_method("reset", &GDNetPeer::reset);
-	ObjectTypeDB::bind_method("disconnect", &GDNetPeer::disconnect,DEFVAL(0));
-	ObjectTypeDB::bind_method("disconnect_later", &GDNetPeer::disconnect_later,DEFVAL(0));
-	ObjectTypeDB::bind_method("disconnect_now", &GDNetPeer::disconnect_now,DEFVAL(0));
-	ObjectTypeDB::bind_method("send_packet", &GDNetPeer::send_packet,DEFVAL(0),DEFVAL(GDNetMessage::UNSEQUENCED));
-	ObjectTypeDB::bind_method("send_var", &GDNetPeer::send_var,DEFVAL(0),DEFVAL(GDNetMessage::UNSEQUENCED));
-	ObjectTypeDB::bind_method("set_timeout", &GDNetPeer::set_timeout);
+	ClassDB::bind_method(D_METHOD("get_peer_id"), &GDNetPeer::get_peer_id);
+	ClassDB::bind_method(D_METHOD("get_address"), &GDNetPeer::get_address);
+	ClassDB::bind_method(D_METHOD("get_avg_rtt"), &GDNetPeer::get_avg_rtt);
+	ClassDB::bind_method(D_METHOD("ping"), &GDNetPeer::ping);
+	ClassDB::bind_method(D_METHOD("reset"), &GDNetPeer::reset);
+	ClassDB::bind_method(D_METHOD("gdnet_disconnect"), &GDNetPeer::gdnet_disconnect,DEFVAL(0));
+	ClassDB::bind_method(D_METHOD("disconnect_later"), &GDNetPeer::disconnect_later,DEFVAL(0));
+	ClassDB::bind_method(D_METHOD("disconnect_now"), &GDNetPeer::disconnect_now,DEFVAL(0));
+	ClassDB::bind_method(D_METHOD("send_packet"), &GDNetPeer::send_packet,DEFVAL(0),DEFVAL(GDNetMessage::UNSEQUENCED));
+	ClassDB::bind_method(D_METHOD("send_var"), &GDNetPeer::send_var,DEFVAL(0),DEFVAL(GDNetMessage::UNSEQUENCED));
+	ClassDB::bind_method(D_METHOD("set_timeout"), &GDNetPeer::set_timeout);
 }
