@@ -1,4 +1,4 @@
-extends MainLoop
+extends Node
 
 var client1 = null
 var client2 = null
@@ -16,13 +16,13 @@ func _init():
 
 	client1 = GDNetHost.new()
 	client1.bind()
-	peer1 = client1.connect(address)
+	peer1 = client1.gdnet_connect(address)
 
 	client2 = GDNetHost.new()
 	client2.bind()
-	peer2 = client2.connect(address)
+	peer2 = client2.gdnet_connect(address)
 
-func _iteration(delta):
+func _process(delta):
 	if (client1.is_event_available()):
 		var event = client1.get_event()
 
