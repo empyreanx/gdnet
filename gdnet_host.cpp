@@ -206,7 +206,7 @@ void GDNetHost::unbind() {
 	}
 }
 
-Ref<GDNetPeer> GDNetHost::gdnet_connect(Ref<GDNetAddress> addr, int data) {
+Ref<GDNetPeer> GDNetHost::host_connect(Ref<GDNetAddress> addr, int data) {
 	ERR_FAIL_COND_V(_host == NULL, NULL);
 
 	PENetAddress penet_addr;
@@ -279,7 +279,7 @@ void GDNetHost::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("bind"),&GDNetHost::bind,DEFVAL(NULL));
 	ClassDB::bind_method(D_METHOD("unbind"),&GDNetHost::unbind);
-	ClassDB::bind_method(D_METHOD("gdnet_connect"),&GDNetHost::gdnet_connect,DEFVAL(0));
+	ClassDB::bind_method(D_METHOD("host_connect"),&GDNetHost::host_connect,DEFVAL(0));
 	ClassDB::bind_method(D_METHOD("broadcast_packet"),&GDNetHost::broadcast_packet,DEFVAL(0),DEFVAL(GDNetMessage::UNSEQUENCED));
 	ClassDB::bind_method(D_METHOD("broadcast_var"),&GDNetHost::broadcast_var,DEFVAL(0),DEFVAL(GDNetMessage::UNSEQUENCED));
 	ClassDB::bind_method(D_METHOD("is_event_available"),&GDNetHost::is_event_available);
