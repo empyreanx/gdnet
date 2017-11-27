@@ -133,7 +133,7 @@ These methods should be called after a successful connection is established, tha
 - **get_address():GDNetAddress**
 - **ping()** - sends a ping to the remote peer
 - **set_ping_interval(pingInterval:Integer)** - Sets the interval at which pings will be sent to a peer
-- **get_avg_rtt** - Average Round Trip Time (RTT). Note, this value is initially 500 ms and will be adjusted by traffic or pings.
+- **get_avg_rtt():Integer** - Average Round Trip Time (RTT). Note, this value is initially 500 ms and will be adjusted by traffic or pings.
 - **reset()** - forcefully disconnect a peer (foreign host is not notified)
 - **peer_disconnect(data:Integer)** - request a disconnection from a peer (data default: 0)
 - **disconnect_later(data:Integer)** - request disconnection after all queued packets have been sent (data default: 0)
