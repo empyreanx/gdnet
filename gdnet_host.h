@@ -81,7 +81,7 @@ public:
 	Error bind(Ref<GDNetAddress> addr);
 	void unbind();
 
-	Ref<GDNetPeer> gdnet_connect(Ref<GDNetAddress> addr = NULL, int data = 0);
+	Ref<GDNetPeer> host_connect(Ref<GDNetAddress> addr = NULL, int data = 0);
 
 	void broadcast_packet(const PoolByteArray& packet, int channel_id = 0, int type = GDNetMessage::UNSEQUENCED);
 	void broadcast_var(const Variant& var, int channel_id = 0, int type = GDNetMessage::UNSEQUENCED);
