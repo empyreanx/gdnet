@@ -33,11 +33,11 @@ func _init():
 
 	client1 = GDNetHost.new()
 	client1.bind()
-	peer1 = client1.gdnet_connect(address)
+	peer1 = client1.host_connect(address)
 
 	client2 = GDNetHost.new()
 	client2.bind()
-	peer2 = client2.gdnet_connect(address)
+	peer2 = client2.host_connect(address)
 
 func _process(delta):
 	if (client1.is_event_available()):
@@ -118,7 +118,7 @@ Server broadcast
 - **set_max_bandwidth_out(max:Integer)** - measured in bytes/sec, must be called before `bind` (default: unlimited)
 - **bind(addr:GDNetAddress)** - starts the host (the system determines the interface/port to bind if `addr` is empty)
 - **unbind()** - stops the host
-- **gdnet_connect(addr:GDNetAddress, data:Integer):GDNetPeer** - attempt to connect to a remote host (data default: 0)
+- **host_connect(addr:GDNetAddress, data:Integer):GDNetPeer** - attempt to connect to a remote host (data default: 0)
 - **broadcast_packet(packet:PoolByteArray, channel_id:Integer, type:Integer)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
 - **broadcast_var(var:Variant, channel_id:Integer, type:Integer)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
 - **is_event_available():Boolean** - returns `true` if there is an event in the queue
@@ -132,9 +132,10 @@ These methods should be called after a successful connection is established, tha
 - **get_peer_id():Integer**
 - **get_address():GDNetAddress**
 - **ping()** - sends a ping to the remote peer
+- **set_ping_interval(pingInterval:Integer)** - Sets the interval at which pings will be sent to a peer
 - **get_avg_rtt** - Average Round Trip Time (RTT). Note, this value is initially 500 ms and will be adjusted by traffic or pings.
 - **reset()** - forcefully disconnect a peer (foreign host is not notified)
-- **gdnet_disconnect(data:Integer)** - request a disconnection from a peer (data default: 0)
+- **peer_disconnect(data:Integer)** - request a disconnection from a peer (data default: 0)
 - **disconnect_later(data:Integer)** - request disconnection after all queued packets have been sent (data default: 0)
 - **disconnect_now(data:Integer)** - forcefully disconnect peer (notification is sent, but not guaranteed to arrive) (data default: 0)
 - **send_packet(packet:PoolByteArray, channel_id:int, type:int)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
