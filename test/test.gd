@@ -16,11 +16,11 @@ func _init():
 
 	client1 = GDNetHost.new()
 	client1.bind()
-	peer1 = client1.gdnet_connect(address)
+	peer1 = client1.host_connect(address)
 
 	client2 = GDNetHost.new()
 	client2.bind()
-	peer2 = client2.gdnet_connect(address)
+	peer2 = client2.host_connect(address)
 
 func _process(delta):
 	if (client1.is_event_available()):
@@ -42,7 +42,7 @@ func _process(delta):
 
 		if (event.get_event_type() == GDNetEvent.RECEIVE):
 			print(event.get_var())
-			peer1.gdnet_disconnect()
+			peer1.peer_disconnect()
 
 	if (server.is_event_available()):
 		var event = server.get_event()
