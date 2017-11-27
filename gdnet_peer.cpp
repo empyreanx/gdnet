@@ -41,6 +41,16 @@ void GDNetPeer::ping() {
 	_host->releaseMutex();
 }
 
+void GDNetPeer::set_ping_interval(int pingInterval) {
+    ERR_FAIL_COND(_host->_host == NULL);
+ 
+    _host->acquireMutex();
+ 
+    penet_peer_ping_interval(_peer, pingInterval);
+ 
+    _host->releaseMutex();
+}
+
 void GDNetPeer::reset() {
 	ERR_FAIL_COND(_host->_host == NULL);
 
@@ -132,6 +142,7 @@ void GDNetPeer::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_address"), &GDNetPeer::get_address);
 	ClassDB::bind_method(D_METHOD("get_avg_rtt"), &GDNetPeer::get_avg_rtt);
 	ClassDB::bind_method(D_METHOD("ping"), &GDNetPeer::ping);
+	ClassDB::bind_method(D_METHOD("set_ping_interval"), &GDNetPeer::set_ping_interval,DEFVAL(0));
 	ClassDB::bind_method(D_METHOD("reset"), &GDNetPeer::reset);
 	ClassDB::bind_method(D_METHOD("gdnet_disconnect"), &GDNetPeer::gdnet_disconnect,DEFVAL(0));
 	ClassDB::bind_method(D_METHOD("disconnect_later"), &GDNetPeer::disconnect_later,DEFVAL(0));
