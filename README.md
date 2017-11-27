@@ -104,7 +104,7 @@ Server broadcast
 - **get_event_type():Integer** - returns one of `GDNetEvent.CONNECT`, `GDNetEvent.DISCONNECT`, or `GDNetEvent.RECEIVE`
 - **get_peer_id():Integer** - the peer associated with the event
 - **get_channel_id():Integer** - only valid for `GDNetEvent.RECEIVE` events
-- **get_packet():RawArray** - only valid for `GDNetEvent.RECEIVE` events
+- **get_packet():PoolByteArray** - only valid for `GDNetEvent.RECEIVE` events
 - **get_var():Variant** - only valid for `GDNetEvent.RECEIVE` events
 - **get_data():Integer** - only valid for `GDNetEvent.CONNECT` and `GDNetEvent.DISCONNECT` events
 
@@ -119,7 +119,7 @@ Server broadcast
 - **bind(addr:GDNetAddress)** - starts the host (the system determines the interface/port to bind if `addr` is empty)
 - **unbind()** - stops the host
 - **gdnet_connect(addr:GDNetAddress, data:Integer):GDNetPeer** - attempt to connect to a remote host (data default: 0)
-- **broadcast_packet(packet:RawArray, channel_id:Integer, type:Integer)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
+- **broadcast_packet(packet:PoolByteArray, channel_id:Integer, type:Integer)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
 - **broadcast_var(var:Variant, channel_id:Integer, type:Integer)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
 - **is_event_available():Boolean** - returns `true` if there is an event in the queue
 - **get_event_count():Integer** - returns the number of events in the queue
@@ -137,7 +137,7 @@ These methods should be called after a successful connection is established, tha
 - **gdnet_disconnect(data:Integer)** - request a disconnection from a peer (data default: 0)
 - **disconnect_later(data:Integer)** - request disconnection after all queued packets have been sent (data default: 0)
 - **disconnect_now(data:Integer)** - forcefully disconnect peer (notification is sent, but not guaranteed to arrive) (data default: 0)
-- **send_packet(packet:RawArray, channel_id:int, type:int)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
+- **send_packet(packet:PoolByteArray, channel_id:int, type:int)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
 - **send_var(var:Variant, channel_id:Integer, type:Integer)** - type must be one of `GDNetMessage.UNSEQUENCED`, `GDNetMessage.SEQUENCED`, or `GDNetMessage.RELIABLE`
 - **set_timeout(limit:int, min_timeout:Integer, max_timeout:Integer)**
 	- **limit** - A factor that is multiplied with a value that based on the average round trip time to compute the timeout limit.
