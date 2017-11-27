@@ -38,6 +38,7 @@ public:
 	int get_avg_rtt();
 
 	void ping();
+	void set_ping_interval(int pingInterval = 0);
 	void reset();
 
 	void gdnet_disconnect(int data = 0);
