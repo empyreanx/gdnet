@@ -41,7 +41,7 @@ public:
 	void set_ping_interval(int pingInterval = 0);
 	void reset();
 
-	void gdnet_disconnect(int data = 0);
+	void host_disconnect(int data = 0);
 	void disconnect_later(int data = 0);
 	void disconnect_now(int data = 0);
 
