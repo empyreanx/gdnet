@@ -1,4 +1,4 @@
 /* register_types.h */
 
-void register_gdnet_types();
-void unregister_gdnet_types();
+void register_gdnet3_types();
+void unregister_gdnet3_types();
