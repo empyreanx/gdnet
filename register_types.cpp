@@ -11,7 +11,7 @@
 #include "gdnet_message.h"
 #include "gdnet_peer.h"
 
-void register_gdnet_types() {
+void register_gdnet3_types() {
 	ClassDB::register_virtual_class<GDNetPeer>();
 	ClassDB::register_virtual_class<GDNetEvent>();
 	ClassDB::register_virtual_class<GDNetMessage>();
@@ -22,6 +22,6 @@ void register_gdnet_types() {
 		ERR_EXPLAIN("Unable to initialize PENet");
 }
 
-void unregister_gdnet_types() {
+void unregister_gdnet3_types() {
 	penet_deinitialize();
 }
