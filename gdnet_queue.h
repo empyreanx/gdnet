@@ -4,55 +4,100 @@
 #define GDNET_QUEUE_H
 
 #include "os/memory.h"
+#include "os/mutex.h"
 
 template<class T, int SIZE = 1024>
 class GDNetQueue {
 	T* items[SIZE];
-	
+
 	int read_pos;
 	int write_pos;
-	
+
+	Mutex* mutex;
+
 public:
 
 	bool is_empty() {
-		return (read_pos == write_pos);
+		bool empty;
+
+		mutex->lock();
+		empty = (read_pos == write_pos);
+		mutex->unlock();
+
+		return empty;
 	}
 
 	bool is_full() {
-		return ((write_pos + 1) % SIZE == read_pos);
+		bool full;
+
+		mutex->lock();
+		full = ((write_pos + 1) % SIZE == read_pos);
+		mutex->unlock();
+
+		return full;
 	}
 
 	int size() {
+		int count;
+
+		mutex->lock();
+
 		if (write_pos > read_pos)
-			return write_pos - read_pos;
+			count = write_pos - read_pos;
 		else if (write_pos < read_pos)
-			return (SIZE - read_pos) + write_pos;
+			count = (SIZE - read_pos) + write_pos;
 		else
-			return 0;
+			count = 0;
+
+		mutex->unlock();
+
+		return count;
 	}
-	
+
 	void push(T* item) {
 		ERR_FAIL_COND(is_full());
-				
+
+		mutex->lock();
+
 		items[write_pos] = item;
 		write_pos = (write_pos + 1) % SIZE;
+
+		mutex->unlock();
 	}
 
 	T* pop() {
 		ERR_FAIL_COND_V(is_empty(), NULL);
-		
-		T* item = items[read_pos];
+
+		T* item;
+
+		mutex->lock();
+
+		item = items[read_pos];
 		read_pos = (read_pos + 1) % SIZE;
+
+		mutex->unlock();
+
 		return item;
 	}
 
 	void clear() {
+		mutex->lock();
+
 		while (!is_empty()) {
 			memdelete(pop());
 		}
+
+		mutex->unlock();
 	}
 
-	GDNetQueue() { read_pos = write_pos = 0; }
+	GDNetQueue() : mutex(NULL) {
+		read_pos = write_pos = 0;
+		mutex = Mutex::create();
+	}
+
+	~GDNetQueue() {
+		memdelete(mutex);
+	}
 };
 
 #endif
