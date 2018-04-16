@@ -8,7 +8,7 @@
 
 template<class T, int SIZE = 1024>
 class GDNetQueue {
-	T* items[SIZE];
+	T* items[SIZE + 1];
 
 	int read_pos;
 	int write_pos;
@@ -31,7 +31,7 @@ public:
 		bool full;
 
 		mutex->lock();
-		full = ((write_pos + 1) % SIZE == read_pos);
+		full = ((write_pos + 1) % (SIZE + 1) == read_pos);
 		mutex->unlock();
 
 		return full;
@@ -45,7 +45,7 @@ public:
 		if (write_pos > read_pos)
 			count = write_pos - read_pos;
 		else if (write_pos < read_pos)
-			count = (SIZE - read_pos) + write_pos;
+			count = (SIZE - read_pos + 1) + write_pos;
 		else
 			count = 0;
 
@@ -60,7 +60,7 @@ public:
 		mutex->lock();
 
 		items[write_pos] = item;
-		write_pos = (write_pos + 1) % SIZE;
+		write_pos = (write_pos + 1) % (SIZE + 1);
 
 		mutex->unlock();
 	}
@@ -73,7 +73,7 @@ public:
 		mutex->lock();
 
 		item = items[read_pos];
-		read_pos = (read_pos + 1) % SIZE;
+		read_pos = (read_pos + 1) % (SIZE + 1);
 
 		mutex->unlock();
 
