@@ -3,9 +3,9 @@
 #ifndef GDNET_PEER_H
 #define GDNET_PEER_H
 
-#include "error_macros.h"
-#include "reference.h"
-#include "variant.h"
+#include "core/error_macros.h"
+#include "core/reference.h"
+#include "core/variant.h"
 
 #include "penet/penet.h"
 

@@ -3,7 +3,7 @@
 #ifndef GDNET_QUEUE_H
 #define GDNET_QUEUE_H
 
-#include "os/memory.h"
+#include "core/os/memory.h"
 
 template<class T, int SIZE = 1024>
 class GDNetQueue {

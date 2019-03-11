@@ -5,10 +5,10 @@
 
 #include <string.h>
 
-#include "os/thread.h"
-#include "os/mutex.h"
-#include "os/os.h"
-#include "reference.h"
+#include "core/os/thread.h"
+#include "core/os/mutex.h"
+#include "core/os/os.h"
+#include "core/reference.h"
 
 #include "penet/penet.h"
 

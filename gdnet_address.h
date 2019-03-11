@@ -3,8 +3,8 @@
 #ifndef GDNET_ADDRESS_H
 #define GDNET_ADDRESS_H
 
-#include "reference.h"
-#include "ustring.h"
+#include "core/reference.h"
+#include "core/ustring.h"
 
 class GDNetAddress : public Reference {
 

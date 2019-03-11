@@ -1,7 +1,7 @@
 /* register_types.cpp */
 
-#include "error_macros.h"
-#include "class_db.h"
+#include "core/error_macros.h"
+#include "core/class_db.h"
 #include "register_types.h"
 
 #include "penet/penet.h"

@@ -5,7 +5,7 @@
 #define PENET_BUILDING_LIB 1
 #include "penet/penet.h"
 
-#include "os/memory.h"
+#include "core/os/memory.h"
 
 static PENetCallbacks callbacks = { malloc, free, abort };
 
