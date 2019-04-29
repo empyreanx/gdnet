@@ -10,7 +10,7 @@ GDNet for Godot 3. If you need to use GDNet for Godot 2.1+, you can find it [her
 
 ## Installation
 
-Simply drop the `gdnet` directory in your `godot/modules` directory and build for the platfom of your choice. GDNet has been verified to build on Linux (64 bit), MacOS X (32/64 bit), and Windows (32/64 bit cross-compiled using MinGW).
+Simply drop the code into a `gdnet3` directory in your `godot/modules` directory and build for the platfom of your choice. GDNet has been verified to build on Linux (64 bit), MacOS X (32/64 bit), and Windows (32/64 bit cross-compiled using MinGW).
 
 ## Example
 
