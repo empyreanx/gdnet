@@ -5,10 +5,10 @@
 
 #include <string.h>
 
-#include "int_types.h"
-#include "os/memory.h"
-#include "object.h"
-#include "variant.h"
+#include "core/int_types.h"
+#include "core/os/memory.h"
+#include "core/object.h"
+#include "core/variant.h"
 
 class GDNetMessage : public Object {
 

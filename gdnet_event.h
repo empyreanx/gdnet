@@ -3,9 +3,9 @@
 #ifndef GDNET_EVENT_H
 #define GDNET_EVENT_H
 
-#include "reference.h"
-#include "variant.h"
-#include "io/marshalls.h"
+#include "core/reference.h"
+#include "core/variant.h"
+#include "core/io/marshalls.h"
 
 #include "penet/penet.h"
 
